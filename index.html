@@ -10,9 +10,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --accent: #38bdf8;
-      --accent-hover: #0ea5e9;
-      --accent-soft: rgba(56, 189, 248, 0.16);
+      --accent: #ef4444;
+      --accent-2: #f97316;
+      --accent-hover: #dc2626;
+      --accent-soft: rgba(239, 68, 68, 0.18);
     }
     body {
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -26,14 +27,34 @@
       transform-origin: 50% 50%;
       filter: drop-shadow(0 0 10px var(--accent-soft));
     }
-    .accent-bg { background-color: var(--accent); }
-    .accent-bg:hover { background-color: var(--accent-hover); }
+    .accent-bg {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+      box-shadow: 0 6px 20px -6px var(--accent-soft);
+    }
+    .accent-bg:hover { filter: brightness(1.08); }
+    .surface-card {
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+    @keyframes ringGlow {
+      0%, 100% { filter: drop-shadow(0 0 8px var(--accent-soft)); }
+      50% { filter: drop-shadow(0 0 18px var(--accent)); }
+    }
+    .ring-active {
+      animation: ringGlow 2.4s ease-in-out infinite;
+    }
     .accent-text { color: var(--accent); }
     .accent-soft-bg { background-color: var(--accent-soft); }
     .accent-border { border-color: var(--accent); }
     @keyframes flameFlicker {
       0%, 100% { transform: scale(1) rotate(-2deg); filter: drop-shadow(0 0 6px rgba(249, 115, 22, 0.7)); }
       50% { transform: scale(1.12) rotate(3deg); filter: drop-shadow(0 0 11px rgba(251, 146, 60, 0.95)); }
+    }
+    @keyframes tabFadeSlide {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .tab-animate {
+      animation: tabFadeSlide 0.24s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .fire-animate {
       display: inline-block;
@@ -105,9 +126,11 @@
     <!-- Compact Top Header -->
     <header class="surface-card flex items-center justify-between gap-3 bg-slate-900/90 border border-slate-800 rounded-2xl px-4 py-3 shadow-lg backdrop-blur-md">
       <div class="flex items-center gap-2.5">
-        <div class="accent-bg w-8 h-8 rounded-xl flex items-center justify-center text-white font-bold text-sm shadow">
-          SF
-        </div>
+        <img
+          src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCABgAGADASIAAhEBAxEB/8QAHAAAAgMBAQEBAAAAAAAAAAAABAUBAwYCAAcI/8QAOBAAAgEDAQQHAwwDAQAAAAAAAQIDAAQRBQYSITETIkFRYXGRgbHRFSMkMjNSU2JyoaLwBxRC4f/EABoBAAIDAQEAAAAAAAAAAAAAAAIDAAEGBAX/xAApEQACAQMDAgUFAQAAAAAAAAABAgADBBEFElEhMSJBYXGBFJGhsfHh/9oADAMBAAIRAxEAPwD8uVNeAroLmpJIAqQDV0cJcjA50dHpkxAPRsB48PfQlo1aLHrFm6andNOBpU33P5D41I0mbsT+Q+NVuh/TnmJt01G6adfJM33P5D41ydKm+5/IfGpul/TnmJitQRTWTTJwD82T344+6gZYWUnI9asNFtRZesHqK6IqDRRMkCiII95gKpWjrQYBbuFC0bSXLQgP0I3YjukfWcc/IVCjJ5ZPj7zVMZJI8P2rcaLp9rolmL/VApuMB0jcb3Rg8QSO1zzAPADBPHlTMEE6ba2e7fgDueIJoWx2o6nuN0YgjcZVpQcuO8KOJHoPGtZF/jvS4FHyprlpbN2iWaOM+mSazerarruo2TzwNJZaex+qjYkcfeZuZ91Zu2tIulDTZbjlieZpY3N1JnoVVoWjLTFPOfM9Pn2n0eb/AB5pU4PyZrtpct2COWOT9gQayeubHahpokcRrPEnFmjByo7yp4+3l40wW22au8BEa2f/AJYMVI9cii3n1bQkWRLh9S05eIDN85EO8NzHrjyoA5B6T16ujI1MvgEcoc49xPnpXdPLB514v0o3ZTvE8mPPPwrZ61YWuuWjX+lgC5wXdFG6JQOfDscdoHAjiOPPDPkE5znvpysHEzFzbPaPyD2PMFnj3WIqk0ddjOG7xmgmolM56q4aSnZTC2+yc/lNL1NMLb7CT9JqnjLbufmOdj7SOe+e5uEDwWidMyNyc5AVT5sR7M08tY21zWpHumL2lqSzEn67nmT7c+lK9EcW+zE8o5zXaJnwVC2PVh6UysG/1NjJ5V+vMxBPmcfGkOcsZqtFoIFG8eEAufXHYfqB69rDXlwY4SVt1OFUcN7xNd7GhJtrtCilRZI5NQt0dGGQwMqggjtGKVbParBpetQXt5ptpqlvGTv2d1no5QQRxI4gjOQewgc6+l6BoGzesa3puvbF6mlpFY3UN5f6NqkwSa1iSRWkkjkPVljUAn7wA9ldCqFGBMxf3tS9rGtUPU/iYrbIJBthr0MKLHFHqNyiIowFAlYAADkOzFH2ly+gPDa30xNw5JntN3P+spHAMfvnmU7BjPHgLdsbu30TavWrq0miudVurya5gljIeO0ikdnR1PJpWVgwPJAQeLfVwvTHf3iSSTkknJJ7zUZQwwYVhf1rKsKtI/7NfeIdD1qOS1YrZ3RDJu8kcciP29aR7YWaQX6XNuoSC7TplUckOSGUeTA+zFOtRY3exkMrcZIWGD5HHwoDXWFzsvbyHi0V26DyZA3vU1zocETTazQRlbYPCQHHpnuJm7n7JD+UUvbto+4+xT9IoBudPSZO47ieXmKPtz8xJ+k0uHOj4D9Hl/Sajy7bufaaTQWWbZm5jPHorpHPkyEZ9VFMrFTd7H3VuvGWBiSPLj8azeyV5HHeyWlw4SC8ToWc8kOQVY+TAezNO9LvH0fVpVuVKxs3RTqf+WHb/fGkOCCZqtGuKZVRUPhYFD6Z8/1MgzFXINPNktfj0HVYrySwhvCHQMJcHEWfnVVT1cumUyQcAnHE5BW1Gzrxs15YDpLV+t1eO7/541k2DqcMDT1cMJm9Q0+tY1TTqD55ms232wuNqr2GSa2tLe3td+K0SGBI3SAtmON2UANuLhRw5DxrNKxZwBVCh2OADWs2X2deRheagOjtU63W4b//AJ41GcKMyafp9a+qinTHzxGOoKbTY62t24SzsDjz4/Cl2ussOy9tGOHS3TuB4KgGfVjRGqXb6zq8S2qlo1booFH/AEx4Z/vhSXa68jkvY7S3cPBZp0CuvJzklmHmxPsxSEGSJpNZuKYVhTOVACD1x3MXTn6PGfyigG5mjZj9Hi/SKBbmaekylz3EgGjIDmKRRzKmgqvt5N1s1bDpAottbrK0bBBFa7T7yLW4I4Z5Ei1SNRHG8hwlyg5Ix7GHIE8xgHBANZWeLBLoMoe7sqlWwcg0LKHEfQrvatgjIM3mn6jfaRO1sUbqnDW0/VZT+Unn/eFGzahoVwc3+ntDKeeYyvuxWUstpJ1gS31CKG/tkG6qTglkHcrjDDyzjwpjDrOjkdUaraflinWRf3ApBQg9RNNbayNgTcGXhxnHt/Y6h1DQ7Zs6fp7TS9mIy3vzQWoahfavOttuN1jhbWDrMx8SOX94UFPrOjheI1W7/LLOqKfPANLrzaSd4Ht7CKKwtnGGSAEM47mc5Y+WceFQKT5S7jWRsKbgq8IMZ9/7GV/eRaHbyQwSJLqkimOR4zlLZDzRD2seRI5cQMkk1kXYkk1yzE8SathiJIZxhB39tPVQgmYuLhrpgAMAS6Y4iRTzCihGq2d95jxqk0SjERWbc3SQKkHFcipooqERTlauEsZPWjQ+ygQa6BoSojlrsoxDw8H4KelSHg/CT0pfvHvqd41WyNF0eB9ofvwfhJ6VBeD8FPSgd499eLE9tTZIbo8D7Qsyxj6saA+AqiWYtVWajNWFxFNWZuk8TmoJqM16iiZ//9k="
+          alt="StudyFlow Logo"
+          class="w-9 h-9 rounded-xl object-cover shadow-md border border-red-500/40"
+        />
         <div>
           <h1 class="text-base sm:text-lg font-bold tracking-tight leading-none">StudyFlow</h1>
           <p class="muted-text text-[11px] text-slate-400 mt-0.5">Today: <span id="top-daily-hours" class="accent-text font-semibold">0h 0m</span></p>
@@ -411,7 +434,8 @@
         <div class="space-y-2">
           <p class="text-xs font-semibold uppercase tracking-wider muted-text text-slate-400">Accent Color</p>
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            <button type="button" data-theme="bluey" class="theme-btn surface-sub px-3 py-2.5 rounded-xl border border-slate-800 text-xs font-semibold flex items-center gap-2 transition"><span class="w-3.5 h-3.5 rounded-full bg-sky-400"></span> Bluey Sky</button>
+            <button type="button" data-theme="crimson" class="theme-btn surface-sub px-3 py-2.5 rounded-xl border border-slate-800 text-xs font-semibold flex items-center gap-2 transition"><span class="w-3.5 h-3.5 rounded-full bg-gradient-to-tr from-red-600 to-orange-400"></span> Crimson Ember</button>
+            <button type="button" data-theme="bluey" class="theme-btn surface-sub px-3 py-2.5 rounded-xl border border-slate-800 text-xs font-semibold flex items-center gap-2 transition"><span class="w-3.5 h-3.5 rounded-full bg-gradient-to-tr from-sky-400 to-indigo-500"></span> Bluey Sky</button>
             <button type="button" data-theme="indigo" class="theme-btn surface-sub px-3 py-2.5 rounded-xl border border-slate-800 text-xs font-semibold flex items-center gap-2 transition"><span class="w-3.5 h-3.5 rounded-full bg-indigo-500"></span> Midnight Indigo</button>
             <button type="button" data-theme="emerald" class="theme-btn surface-sub px-3 py-2.5 rounded-xl border border-slate-800 text-xs font-semibold flex items-center gap-2 transition"><span class="w-3.5 h-3.5 rounded-full bg-emerald-500"></span> Emerald Forest</button>
             <button type="button" data-theme="amber" class="theme-btn surface-sub px-3 py-2.5 rounded-xl border border-slate-800 text-xs font-semibold flex items-center gap-2 transition"><span class="w-3.5 h-3.5 rounded-full bg-amber-500"></span> Warm Amber</button>
@@ -545,13 +569,14 @@
     sampleExam2.setHours(14, 0, 0, 0);
 
     const THEMES = {
-      bluey: { accent: '#38bdf8', hover: '#0ea5e9', soft: 'rgba(56, 189, 248, 0.16)' },
-      indigo: { accent: '#6366f1', hover: '#818cf8', soft: 'rgba(99, 102, 241, 0.16)' },
-      emerald: { accent: '#10b981', hover: '#34d399', soft: 'rgba(16, 185, 129, 0.16)' },
-      amber: { accent: '#f59e0b', hover: '#fbbf24', soft: 'rgba(245, 158, 11, 0.16)' },
-      rose: { accent: '#f43f5e', hover: '#fb7185', soft: 'rgba(244, 63, 94, 0.16)' },
-      neon: { accent: '#d946ef', hover: '#e879f9', soft: 'rgba(217, 70, 239, 0.18)' },
-      aurora: { accent: '#14b8a6', hover: '#2dd4bf', soft: 'rgba(20, 184, 166, 0.18)' }
+      crimson: { accent: '#ef4444', accent2: '#f97316', hover: '#dc2626', soft: 'rgba(239, 68, 68, 0.20)' },
+      bluey: { accent: '#38bdf8', accent2: '#6366f1', hover: '#0ea5e9', soft: 'rgba(56, 189, 248, 0.18)' },
+      indigo: { accent: '#6366f1', accent2: '#a855f7', hover: '#818cf8', soft: 'rgba(99, 102, 241, 0.18)' },
+      emerald: { accent: '#10b981', accent2: '#06b6d4', hover: '#34d399', soft: 'rgba(16, 185, 129, 0.18)' },
+      amber: { accent: '#f59e0b', accent2: '#ef4444', hover: '#fbbf24', soft: 'rgba(245, 158, 11, 0.18)' },
+      rose: { accent: '#f43f5e', accent2: '#ec4899', hover: '#fb7185', soft: 'rgba(244, 63, 94, 0.18)' },
+      neon: { accent: '#d946ef', accent2: '#6366f1', hover: '#e879f9', soft: 'rgba(217, 70, 239, 0.20)' },
+      aurora: { accent: '#14b8a6', accent2: '#38bdf8', hover: '#2dd4bf', soft: 'rgba(20, 184, 166, 0.20)' }
     };
 
     const WALLPAPERS = {
@@ -926,11 +951,16 @@
     // Bottom Tab Switching
     function switchTab(tab) {
       state.activeTab = tab;
-      viewTimer.classList.toggle('hidden', tab !== 'timer');
-      viewStats.classList.toggle('hidden', tab !== 'stats');
-      viewTasks.classList.toggle('hidden', tab !== 'tasks');
-      viewCalendar.classList.toggle('hidden', tab !== 'calendar');
-      viewMore.classList.toggle('hidden', tab !== 'more');
+      const views = { timer: viewTimer, stats: viewStats, tasks: viewTasks, calendar: viewCalendar, more: viewMore };
+      Object.entries(views).forEach(([k, el]) => {
+        const active = k === tab;
+        el.classList.toggle('hidden', !active);
+        el.classList.remove('tab-animate');
+        if (active) {
+          void el.offsetWidth;
+          el.classList.add('tab-animate');
+        }
+      });
 
       [
         { btn: tabTimerBtn, key: 'timer' },
@@ -1013,7 +1043,7 @@
         avgMins = Math.round(totalMins / 28);
       } else {
         const year = now.getFullYear();
-        const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         statsPeriodLabel.textContent = `${year}`;
         statsChartTitle.textContent = `${year} Yearly Study Hours`;
         const monthTotals = Array(12).fill(0);
@@ -1036,29 +1066,42 @@
       statsTotalSessions.textContent = state.completedSessions;
       statsChartPeak.textContent = `Peak: ${formatHoursMinutes(Math.max(0, ...items.map((x) => x.mins)))}`;
 
+      const isDense = items.length > 7;
+      statsBars.className = isDense
+        ? 'h-44 flex items-end gap-2.5 pt-4 overflow-x-auto pb-1'
+        : 'h-44 flex items-end justify-between gap-2 pt-4 overflow-hidden';
       statsBars.innerHTML = '';
       items.forEach((item) => {
         const col = document.createElement('div');
-        col.className = 'flex-1 flex flex-col items-center justify-end h-full gap-1.5';
+        col.className = isDense
+          ? 'min-w-[34px] flex-1 flex flex-col items-center justify-end h-full gap-1.5 shrink-0'
+          : 'flex-1 min-w-0 flex flex-col items-center justify-end h-full gap-1.5';
 
         const valLabel = document.createElement('span');
-        valLabel.className = 'muted-text text-[10px] font-semibold text-slate-400';
+        valLabel.className = isDense
+          ? 'muted-text text-[9px] font-semibold text-slate-400 truncate max-w-full'
+          : 'muted-text text-[10px] font-semibold text-slate-400';
         valLabel.textContent = item.mins >= 60 ? `${(item.mins / 60).toFixed(1)}h` : `${item.mins}m`;
 
         const track = document.createElement('div');
-        track.className = 'w-full max-w-[40px] flex-1 flex items-end justify-center bg-slate-800/30 rounded-xl overflow-hidden';
+        track.className = isDense
+          ? 'w-full max-w-[20px] flex-1 flex items-end justify-center bg-slate-800/30 rounded-lg overflow-hidden'
+          : 'w-full max-w-[40px] flex-1 flex items-end justify-center bg-slate-800/30 rounded-xl overflow-hidden';
 
         const bar = document.createElement('div');
         const pct = item.mins > 0 ? Math.max(8, Math.round((item.mins / maxMins) * 100)) : 4;
         bar.className = item.muted
-          ? 'w-full rounded-t-xl bg-slate-700/60 transition-all duration-300'
-          : 'w-full rounded-t-xl accent-bg transition-all duration-300';
-        bar.style.height = `${pct}%`;
+          ? 'w-full rounded-t-lg bg-slate-700/60 transition-all duration-500 ease-out'
+          : 'w-full rounded-t-lg accent-bg transition-all duration-500 ease-out';
+        bar.style.height = '0%';
+        requestAnimationFrame(() => { bar.style.height = `${pct}%`; });
 
         track.appendChild(bar);
 
         const lbl = document.createElement('span');
-        lbl.className = 'muted-text text-[11px] font-medium text-slate-400';
+        lbl.className = isDense
+          ? 'muted-text text-[10px] font-medium text-slate-400'
+          : 'muted-text text-[11px] font-medium text-slate-400';
         lbl.textContent = item.label;
 
         col.appendChild(valLabel);
@@ -1121,6 +1164,7 @@
       const t = THEMES[themeKey] || THEMES.bluey;
       state.theme = themeKey;
       document.documentElement.style.setProperty('--accent', t.accent);
+      document.documentElement.style.setProperty('--accent-2', t.accent2 || t.accent);
       document.documentElement.style.setProperty('--accent-hover', t.hover);
       document.documentElement.style.setProperty('--accent-soft', t.soft);
       themeButtons.forEach((btn) => {
@@ -1263,6 +1307,7 @@
       const progress = state.totalSeconds > 0 ? state.remainingSeconds / state.totalSeconds : 0;
       progressCircle.style.strokeDashoffset = circumference * (1 - progress);
       sessionCountEl.textContent = state.completedSessions;
+      progressCircle.classList.toggle('ring-active', state.isRunning);
       startPauseBtn.textContent = state.isRunning ? 'Pause' : state.timerMode === 'break' ? 'Start Break' : 'Start Focus';
       document.title = state.isRunning ? `${formatted} · ${state.timerMode === 'break' ? 'Break' : 'Focus'} — StudyFlow` : 'StudyFlow — Study Hub';
     }
@@ -1286,24 +1331,35 @@
     modeFocusBtn.addEventListener('click', () => switchTimerMode('focus'));
     modeBreakBtn.addEventListener('click', () => switchTimerMode('break'));
 
+    let sharedAudioCtx = null;
+    function unlockAudio() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!sharedAudioCtx) sharedAudioCtx = new AudioCtx();
+        if (sharedAudioCtx.state === 'suspended') sharedAudioCtx.resume();
+      } catch (e) {}
+    }
+
     function playChime() {
       if (!soundToggle.checked) return;
       try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        const ctx = new AudioCtx();
+        unlockAudio();
+        const ctx = sharedAudioCtx || new (window.AudioContext || window.webkitAudioContext)();
         const now = ctx.currentTime;
-        [523.25, 659.25, 783.99].forEach((freq, idx) => {
+        // Clear, pleasant 5-note alarm ring
+        [587.33, 739.99, 880.0, 587.33, 880.0].forEach((freq, idx) => {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, now + idx * 0.15);
-          gain.gain.setValueAtTime(0.18, now + idx * 0.15);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.15 + 0.6);
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.22);
+          gain.gain.setValueAtTime(0.32, now + idx * 0.22);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.22 + 0.55);
           osc.connect(gain);
           gain.connect(ctx.destination);
-          osc.start(now + idx * 0.15);
-          osc.stop(now + idx * 0.15 + 0.6);
+          osc.start(now + idx * 0.22);
+          osc.stop(now + idx * 0.22 + 0.55);
         });
+        if (navigator.vibrate) navigator.vibrate([300, 120, 300, 120, 450]);
       } catch (e) {}
     }
 
@@ -1331,6 +1387,7 @@
     }
 
     function toggleTimer() {
+      unlockAudio();
       if (state.isRunning) {
         stopTimer();
         timerStatus.textContent = 'Paused';
@@ -1340,6 +1397,7 @@
       }
       if (state.remainingSeconds <= 0) state.remainingSeconds = state.totalSeconds;
       state.isRunning = true;
+      const endTime = Date.now() + state.remainingSeconds * 1000;
       const topic = studyTopicInput.value.trim();
       timerStatus.textContent = topic ? `Focusing: ${topic}` : (state.timerMode === 'break' ? 'On a break...' : 'Focusing...');
       toastMsg.classList.add('opacity-0');
@@ -1352,11 +1410,11 @@
       );
 
       state.intervalId = setInterval(() => {
-        state.remainingSeconds -= 1;
-        if (state.remainingSeconds > 0 && state.remainingSeconds % 15 === 0) {
+        state.remainingSeconds = Math.max(0, Math.round((endTime - Date.now()) / 1000));
+        if (state.remainingSeconds > 0) {
           sendNotification(
             state.timerMode === 'break' ? 'Break Timer Running' : 'Focus Timer Running',
-            `${formatTime(state.remainingSeconds)} remaining`,
+            `${formatTime(state.remainingSeconds)} remaining${topic ? ' · ' + topic : ''}`,
             'studyflow-running',
             true
           );
@@ -1369,11 +1427,11 @@
             logStudyMinutes(Math.round(state.totalSeconds / 60));
             timerStatus.textContent = 'Great job! Take a break.';
             reminderBannerText.textContent = 'Focus session complete! Time for a well-earned break.';
-            sendNotification('Focus Session Complete!', 'Great job! Time for a break.', 'studyflow-running', false);
+            sendNotification('Focus Session Complete!', 'Great job! Time for a break.', 'studyflow-complete', false);
           } else {
             timerStatus.textContent = 'Break finished! Ready to focus.';
             reminderBannerText.textContent = 'Break finished! Ready for your next focus session.';
-            sendNotification('Break Finished!', 'Ready for your next focus session.', 'studyflow-running', false);
+            sendNotification('Break Finished!', 'Ready for your next focus session.', 'studyflow-complete', false);
           }
           reminderBanner.classList.remove('hidden');
           reminderBanner.classList.add('flex');
