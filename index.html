@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&family=Outfit:wght@500;600;700&family=Playfair+Display:wght@600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
   <style>
     :root {
       --accent: #ef4444;
@@ -62,52 +62,87 @@
       transform-origin: bottom center;
     }
 
+    /* Apple-style Liquid Glass UI (Dark & Light) */
+    .surface-card {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.52), rgba(15, 23, 42, 0.28)) !important;
+      border: 1px solid rgba(255, 255, 255, 0.16) !important;
+      backdrop-filter: blur(24px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+      box-shadow: 0 14px 38px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+    }
+    .surface-sub {
+      background: rgba(255, 255, 255, 0.06) !important;
+      border-color: rgba(255, 255, 255, 0.14) !important;
+      backdrop-filter: blur(14px) !important;
+      -webkit-backdrop-filter: blur(14px) !important;
+    }
     body.theme-light {
-      background-color: #f0f9ff;
+      background-color: #e0f2fe;
       color: #0f172a;
     }
     body.theme-light .surface-card {
-      background-color: rgba(255, 255, 255, 0.92);
-      border-color: #bae6fd;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.30)) !important;
+      border: 1px solid rgba(255, 255, 255, 0.68) !important;
       color: #0f172a;
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(24px) saturate(185%) !important;
+      -webkit-backdrop-filter: blur(24px) saturate(185%) !important;
+      box-shadow: 0 12px 34px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
     }
     body.theme-light .surface-sub {
-      background-color: #f8fafc;
-      border-color: #cbd5e1;
+      background: rgba(255, 255, 255, 0.40) !important;
+      border-color: rgba(255, 255, 255, 0.62) !important;
       color: #0f172a;
+      backdrop-filter: blur(14px) !important;
+      -webkit-backdrop-filter: blur(14px) !important;
     }
-    body.theme-light .muted-text { color: #475569; }
+    body.theme-light .muted-text { color: #334155; }
 
-    body.bg-bluey {
-      background: radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.25), transparent 45%),
-                  radial-gradient(circle at 85% 80%, rgba(37, 99, 235, 0.28), transparent 50%),
-                  linear-gradient(135deg, #071329 0%, #0b2545 55%, #0f172a 100%);
+    button, .nav-tab { transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s ease, background 0.25s ease; }
+    button:active { transform: scale(0.96); }
+
+    body.bg-crimson {
+      background: radial-gradient(circle at 18% 18%, rgba(239, 68, 68, 0.42), transparent 46%),
+                  radial-gradient(circle at 84% 78%, rgba(249, 115, 22, 0.34), transparent 50%),
+                  linear-gradient(135deg, #09050a 0%, #1c070d 55%, #0a0a0f 100%);
     }
-    body.theme-light.bg-bluey {
-      background: radial-gradient(circle at 15% 20%, rgba(125, 211, 252, 0.55), transparent 45%),
-                  radial-gradient(circle at 85% 80%, rgba(147, 197, 253, 0.55), transparent 50%),
-                  linear-gradient(135deg, #e0f2fe 0%, #dbeafe 55%, #f0f9ff 100%);
+    body.theme-light.bg-crimson {
+      background: radial-gradient(circle at 18% 18%, rgba(254, 202, 202, 0.85), transparent 46%),
+                  radial-gradient(circle at 84% 78%, rgba(254, 215, 170, 0.85), transparent 50%),
+                  linear-gradient(135deg, #fff1f2 0%, #ffedd5 100%);
     }
-    body.bg-ocean {
-      background: linear-gradient(135deg, #041b2d 0%, #083344 50%, #0f172a 100%);
+    body.bg-aurora {
+      background: radial-gradient(circle at 15% 25%, rgba(20, 184, 166, 0.38), transparent 48%),
+                  radial-gradient(circle at 85% 75%, rgba(99, 102, 241, 0.42), transparent 52%),
+                  linear-gradient(135deg, #03151e 0%, #071932 55%, #090d1f 100%);
     }
-    body.theme-light.bg-ocean {
-      background: linear-gradient(135deg, #cffafe 0%, #e0f2fe 50%, #ecfeff 100%);
+    body.theme-light.bg-aurora {
+      background: radial-gradient(circle at 15% 25%, rgba(153, 246, 228, 0.75), transparent 48%),
+                  radial-gradient(circle at 85% 75%, rgba(199, 210, 254, 0.75), transparent 52%),
+                  linear-gradient(135deg, #ecfeff 0%, #eef2ff 100%);
     }
-    body.bg-grid {
-      background-color: #020617;
-      background-image: radial-gradient(rgba(56, 189, 248, 0.18) 1px, transparent 1px);
-      background-size: 22px 22px;
+    body.bg-sunset {
+      background: radial-gradient(circle at 20% 20%, rgba(244, 63, 94, 0.42), transparent 48%),
+                  radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.35), transparent 50%),
+                  linear-gradient(135deg, #1a0814 0%, #240c1e 50%, #12081a 100%);
     }
-    body.theme-light.bg-grid {
-      background-color: #f0f9ff;
-      background-image: radial-gradient(rgba(2, 132, 199, 0.22) 1px, transparent 1px);
-      background-size: 22px 22px;
+    body.theme-light.bg-sunset {
+      background: radial-gradient(circle at 20% 20%, rgba(254, 205, 211, 0.85), transparent 48%),
+                  radial-gradient(circle at 80% 80%, rgba(253, 230, 138, 0.85), transparent 50%),
+                  linear-gradient(135deg, #fff1f2 0%, #fef3c7 100%);
+    }
+    body.bg-cosmic {
+      background: radial-gradient(circle at 20% 15%, rgba(168, 85, 247, 0.42), transparent 46%),
+                  radial-gradient(circle at 82% 82%, rgba(56, 189, 248, 0.36), transparent 50%),
+                  linear-gradient(135deg, #090517 0%, #13092b 55%, #050b1a 100%);
+    }
+    body.theme-light.bg-cosmic {
+      background: radial-gradient(circle at 20% 15%, rgba(233, 213, 255, 0.85), transparent 46%),
+                  radial-gradient(circle at 82% 82%, rgba(186, 230, 253, 0.85), transparent 50%),
+                  linear-gradient(135deg, #faf5ff 0%, #e0f2fe 100%);
     }
   </style>
 </head>
-<body class="min-h-screen p-3 sm:p-6 pb-28 bg-bluey">
+<body class="min-h-screen p-3 sm:p-6 pb-28 bg-crimson">
   <div class="w-full max-w-3xl mx-auto space-y-4">
     <!-- Active Reminder / Timer Alert Banner -->
     <div
@@ -167,9 +202,10 @@
         </div>
       </div>
 
-      <div class="surface-sub grid grid-cols-2 gap-1.5 bg-slate-950/70 p-1 rounded-xl border border-slate-800">
-        <button id="mode-focus-btn" type="button" class="accent-bg py-2 rounded-lg text-xs font-semibold text-white transition">Focus Session</button>
-        <button id="mode-break-btn" type="button" class="muted-text py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition">Break (10 min)</button>
+      <div class="surface-sub grid grid-cols-3 gap-1.5 bg-slate-950/70 p-1 rounded-xl border border-slate-800">
+        <button id="mode-focus-btn" type="button" class="mode-switch-btn accent-bg py-2 rounded-lg text-xs font-semibold text-white transition">Focus</button>
+        <button id="mode-countup-btn" type="button" class="mode-switch-btn muted-text py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition">Timer Mode</button>
+        <button id="mode-break-btn" type="button" class="mode-switch-btn muted-text py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition">Break (10m)</button>
       </div>
 
       <section class="flex flex-col items-center justify-center py-2">
@@ -213,9 +249,26 @@
           </div>
         </div>
 
+        <div class="surface-sub bg-slate-950/50 border border-slate-800/80 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <label class="inline-flex items-center gap-2 cursor-pointer select-none font-medium">
+            <input id="auto-pomo-toggle" type="checkbox" class="accent-red-500 rounded" />
+            <span>Auto-Pomodoro (Focus &harr; Break)</span>
+          </label>
+          <div class="flex items-center gap-1.5">
+            <span class="muted-text text-slate-400">Break:</span>
+            <select id="auto-break-mins" aria-label="Auto break minutes" class="surface-card bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs font-semibold">
+              <option value="5">5 min</option>
+              <option value="10" selected>10 min</option>
+              <option value="15">15 min</option>
+            </select>
+          </div>
+        </div>
+
+
+
         <div class="muted-text flex items-center justify-between text-xs text-slate-400">
           <label class="inline-flex items-center gap-2 cursor-pointer select-none">
-            <input id="sound-toggle" type="checkbox" checked class="accent-sky-500 rounded" />
+            <input id="sound-toggle" type="checkbox" checked class="accent-red-500 rounded" />
             <span>Chime when finished</span>
           </label>
           <span id="toast-msg" class="text-emerald-400 font-medium opacity-0 transition-opacity">Session complete!</span>
@@ -419,15 +472,15 @@
         </div>
 
         <div class="space-y-2">
-          <p class="text-xs font-semibold uppercase tracking-wider muted-text text-slate-400">Wallpapers &amp; Backgrounds</p>
+          <p class="text-xs font-semibold uppercase tracking-wider muted-text text-slate-400">Liquid Glass Backgrounds</p>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <button type="button" data-bg="crimson" class="bg-btn surface-sub px-3 py-2 rounded-xl border border-slate-800 text-xs font-semibold transition">Crimson Velvet</button>
+            <button type="button" data-bg="aurora" class="bg-btn surface-sub px-3 py-2 rounded-xl border border-slate-800 text-xs font-semibold transition">Liquid Aurora</button>
+            <button type="button" data-bg="sunset" class="bg-btn surface-sub px-3 py-2 rounded-xl border border-slate-800 text-xs font-semibold transition">Sunset Prism</button>
+            <button type="button" data-bg="cosmic" class="bg-btn surface-sub px-3 py-2 rounded-xl border border-slate-800 text-xs font-semibold transition">Cosmic Violet</button>
             <button type="button" data-bg="leaves" class="bg-btn surface-sub px-3 py-2 rounded-xl border border-slate-800 text-xs font-semibold transition">Red Leaves</button>
             <button type="button" data-bg="nature" class="bg-btn surface-sub px-3 py-2 rounded-xl border border-slate-800 text-xs font-semibold transition">Misty Nature</button>
             <button type="button" data-bg="sky" class="bg-btn surface-sub px-3 py-2 rounded-xl border border-slate-800 text-xs font-semibold transition">Bluey Sky</button>
-            <button type="button" data-bg="bluey" class="bg-btn surface-sub px-3 py-2 rounded-xl border border-slate-800 text-xs font-semibold transition">Bluey Glow</button>
-            <button type="button" data-bg="ocean" class="bg-btn surface-sub px-3 py-2 rounded-xl border border-slate-800 text-xs font-semibold transition">Ocean Gradient</button>
-            <button type="button" data-bg="grid" class="bg-btn surface-sub px-3 py-2 rounded-xl border border-slate-800 text-xs font-semibold transition">Study Grid</button>
-            <button type="button" data-bg="solid" class="bg-btn surface-sub px-3 py-2 rounded-xl border border-slate-800 text-xs font-semibold transition">Clean Solid</button>
           </div>
         </div>
 
@@ -441,16 +494,21 @@
             <button type="button" data-theme="amber" class="theme-btn surface-sub px-3 py-2.5 rounded-xl border border-slate-800 text-xs font-semibold flex items-center gap-2 transition"><span class="w-3.5 h-3.5 rounded-full bg-amber-500"></span> Warm Amber</button>
             <button type="button" data-theme="rose" class="theme-btn surface-sub px-3 py-2.5 rounded-xl border border-slate-800 text-xs font-semibold flex items-center gap-2 transition"><span class="w-3.5 h-3.5 rounded-full bg-rose-500"></span> Rose Sunset</button>
             <button type="button" data-theme="neon" data-pro="true" class="theme-btn surface-sub px-3 py-2.5 rounded-xl border border-slate-800 text-xs font-semibold flex items-center justify-between gap-1 transition"><span class="flex items-center gap-2"><span class="w-3.5 h-3.5 rounded-full bg-fuchsia-500"></span> Purple Neon</span><span class="pro-tag text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400">PRO</span></button>
-            <button type="button" data-theme="aurora" data-pro="true" class="theme-btn surface-sub px-3 py-2.5 rounded-xl border border-slate-800 text-xs font-semibold flex items-center justify-between gap-1 transition"><span class="flex items-center gap-2"><span class="w-3.5 h-3.5 rounded-full bg-teal-400"></span> Aurora Teal</span><span class="pro-tag text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400">PRO</span></button>
+            <button type="button" data-theme="aurora" data-pro="true" class="theme-btn surface-sub px-3 py-2.5 rounded-xl border border-slate-800 text-xs font-semibold flex items-center justify-between gap-1 transition"><span class="flex items-center gap-2"><span class="w-3.5 h-3.5 rounded-full bg-gradient-to-tr from-teal-400 to-sky-400"></span> Aurora Teal</span><span class="pro-tag text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400">PRO</span></button>
+            <button type="button" data-theme="gold" data-pro="true" class="theme-btn surface-sub px-3 py-2.5 rounded-xl border border-slate-800 text-xs font-semibold flex items-center justify-between gap-1 transition"><span class="flex items-center gap-2"><span class="w-3.5 h-3.5 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-300"></span> Cyber Gold</span><span class="pro-tag text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400">PRO</span></button>
+            <button type="button" data-theme="royal" data-pro="true" class="theme-btn surface-sub px-3 py-2.5 rounded-xl border border-slate-800 text-xs font-semibold flex items-center justify-between gap-1 transition"><span class="flex items-center gap-2"><span class="w-3.5 h-3.5 rounded-full bg-gradient-to-tr from-violet-500 to-rose-500"></span> Royal Velvet</span><span class="pro-tag text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400">PRO</span></button>
           </div>
         </div>
 
         <div class="space-y-2">
           <p class="text-xs font-semibold uppercase tracking-wider muted-text text-slate-400">App &amp; Clock Font</p>
-          <div class="grid grid-cols-3 gap-2">
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
             <button type="button" data-font="sans" class="font-btn surface-sub px-3 py-2 rounded-xl border border-slate-800 text-xs font-semibold transition">Modern Sans</button>
             <button type="button" data-font="mono" class="font-btn surface-sub px-3 py-2 rounded-xl border border-slate-800 text-xs font-semibold font-mono transition">Tech Mono</button>
             <button type="button" data-font="serif" class="font-btn surface-sub px-3 py-2 rounded-xl border border-slate-800 text-xs font-semibold transition" style="font-family: 'Playfair Display', Georgia, serif;">Editorial Serif</button>
+            <button type="button" data-font="space" data-pro="true" class="font-btn surface-sub px-3 py-2 rounded-xl border border-slate-800 text-xs font-semibold transition" style="font-family: 'Space Grotesk', sans-serif;">Space Tech (PRO)</button>
+            <button type="button" data-font="outfit" data-pro="true" class="font-btn surface-sub px-3 py-2 rounded-xl border border-slate-800 text-xs font-semibold transition" style="font-family: 'Outfit', sans-serif;">Outfit Soft (PRO)</button>
+            <button type="button" data-font="cinzel" data-pro="true" class="font-btn surface-sub px-3 py-2 rounded-xl border border-slate-800 text-xs font-semibold transition" style="font-family: 'Cinzel', Georgia, serif;">Cinzel Royal (PRO)</button>
           </div>
         </div>
 
@@ -530,6 +588,7 @@
     </div>
   </div>
 
+
   <!-- BOTTOM NAVIGATION DOCK (Well-spaced tabs at the bottom!) -->
   <nav aria-label="Primary navigation" class="fixed bottom-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-2xl z-40">
     <div class="surface-card bg-slate-900/95 border border-slate-800 rounded-2xl shadow-2xl px-3 py-2 flex items-center justify-around gap-2 backdrop-blur-lg">
@@ -576,7 +635,9 @@
       amber: { accent: '#f59e0b', accent2: '#ef4444', hover: '#fbbf24', soft: 'rgba(245, 158, 11, 0.18)' },
       rose: { accent: '#f43f5e', accent2: '#ec4899', hover: '#fb7185', soft: 'rgba(244, 63, 94, 0.18)' },
       neon: { accent: '#d946ef', accent2: '#6366f1', hover: '#e879f9', soft: 'rgba(217, 70, 239, 0.20)' },
-      aurora: { accent: '#14b8a6', accent2: '#38bdf8', hover: '#2dd4bf', soft: 'rgba(20, 184, 166, 0.20)' }
+      aurora: { accent: '#14b8a6', accent2: '#38bdf8', hover: '#2dd4bf', soft: 'rgba(20, 184, 166, 0.20)' },
+      gold: { accent: '#f59e0b', accent2: '#eab308', hover: '#fbbf24', soft: 'rgba(245, 158, 11, 0.22)' },
+      royal: { accent: '#8b5cf6', accent2: '#f43f5e', hover: '#a78bfa', soft: 'rgba(139, 92, 246, 0.22)' }
     };
 
     const WALLPAPERS = {
@@ -589,6 +650,7 @@
       activeTab: 'timer',
       statsPeriod: 'daily',
       timerMode: 'focus',
+      elapsedSeconds: 0,
       totalSeconds: 50 * 60,
       remainingSeconds: 50 * 60,
       isRunning: false,
@@ -613,9 +675,9 @@
       reminders: [
         { id: 201, title: 'Stretch & hydrate', time: '16:00', enabled: true, lastTriggeredDate: '' }
       ],
-      theme: 'bluey',
+      theme: 'crimson',
       colorMode: 'dark',
-      bgStyle: 'bluey',
+      bgStyle: 'crimson',
       clockFont: 'sans',
       ambientSound: 'off',
       ambientVolume: 0.3,
@@ -710,6 +772,7 @@
     const statsBars = document.getElementById('stats-bars');
 
     const modeFocusBtn = document.getElementById('mode-focus-btn');
+    const modeCountupBtn = document.getElementById('mode-countup-btn');
     const modeBreakBtn = document.getElementById('mode-break-btn');
     const timerModePill = document.getElementById('timer-mode-pill');
     const timerDisplay = document.getElementById('timer-display');
@@ -723,6 +786,8 @@
     const progressCircle = document.getElementById('progress-circle');
     const sessionCountEl = document.getElementById('session-count');
     const soundToggle = document.getElementById('sound-toggle');
+    const autoPomoToggle = document.getElementById('auto-pomo-toggle');
+    const autoBreakMins = document.getElementById('auto-break-mins');
     const toastMsg = document.getElementById('toast-msg');
     const studyTopicInput = document.getElementById('study-topic');
 
@@ -1134,7 +1199,7 @@
 
     function applyBackground(bg) {
       state.bgStyle = bg;
-      document.body.classList.remove('bg-bluey', 'bg-ocean', 'bg-grid');
+      document.body.classList.remove('bg-crimson', 'bg-aurora', 'bg-sunset', 'bg-cosmic');
       document.body.style.backgroundImage = '';
       document.body.style.backgroundSize = '';
       document.body.style.backgroundPosition = '';
@@ -1142,13 +1207,13 @@
 
       if (WALLPAPERS[bg]) {
         const overlay = state.colorMode === 'light'
-          ? 'linear-gradient(rgba(240, 249, 255, 0.35), rgba(240, 249, 255, 0.35))'
-          : 'linear-gradient(rgba(2, 6, 23, 0.45), rgba(2, 6, 23, 0.45))';
+          ? 'linear-gradient(rgba(240, 249, 255, 0.15), rgba(240, 249, 255, 0.15))'
+          : 'linear-gradient(rgba(2, 6, 23, 0.28), rgba(2, 6, 23, 0.28))';
         document.body.style.backgroundImage = `${overlay}, url('${WALLPAPERS[bg]}')`;
         document.body.style.backgroundSize = 'cover';
         document.body.style.backgroundPosition = 'center';
         document.body.style.backgroundAttachment = 'fixed';
-      } else if (bg !== 'solid') {
+      } else if (bg) {
         document.body.classList.add(`bg-${bg}`);
       }
 
@@ -1180,6 +1245,9 @@
       let family = "'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
       if (fontKey === 'mono') family = "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
       else if (fontKey === 'serif') family = "'Playfair Display', Georgia, 'Times New Roman', serif";
+      else if (fontKey === 'space') family = "'Space Grotesk', system-ui, sans-serif";
+      else if (fontKey === 'outfit') family = "'Outfit', system-ui, sans-serif";
+      else if (fontKey === 'cinzel') family = "'Cinzel', Georgia, serif";
       document.body.style.fontFamily = family;
       timerDisplay.style.fontFamily = family;
       fontButtons.forEach((btn) => {
@@ -1200,7 +1268,14 @@
         applyTheme(key);
       }
     }));
-    fontButtons.forEach((btn) => btn.addEventListener('click', () => applyClockFont(btn.dataset.font)));
+    fontButtons.forEach((btn) => btn.addEventListener('click', () => {
+      const fk = btn.dataset.font;
+      if (btn.dataset.pro === 'true') {
+        triggerRewardedAd(`font_${fk}`, btn.textContent.replace('(PRO)', '').trim(), () => applyClockFont(fk));
+      } else {
+        applyClockFont(fk);
+      }
+    }));
 
     // Ambient Soundscapes
     let ambientCtx = null;
@@ -1302,33 +1377,65 @@
     }
 
     function updateTimerUI() {
-      const formatted = formatTime(state.remainingSeconds);
+      const isCountup = state.timerMode === 'countup';
+      const displaySec = isCountup ? state.elapsedSeconds : state.remainingSeconds;
+      const formatted = formatTime(displaySec);
       timerDisplay.textContent = formatted;
-      const progress = state.totalSeconds > 0 ? state.remainingSeconds / state.totalSeconds : 0;
+      const progress = isCountup
+        ? Math.min(1, state.elapsedSeconds / (180 * 60))
+        : (state.totalSeconds > 0 ? state.remainingSeconds / state.totalSeconds : 0);
       progressCircle.style.strokeDashoffset = circumference * (1 - progress);
       sessionCountEl.textContent = state.completedSessions;
       progressCircle.classList.toggle('ring-active', state.isRunning);
-      startPauseBtn.textContent = state.isRunning ? 'Pause' : state.timerMode === 'break' ? 'Start Break' : 'Start Focus';
-      document.title = state.isRunning ? `${formatted} · ${state.timerMode === 'break' ? 'Break' : 'Focus'} — StudyFlow` : 'StudyFlow — Study Hub';
+
+      if (state.isRunning && state.timerMode !== 'break') {
+        if (state.elapsedSeconds < 15) {
+          const graceLeft = 15 - state.elapsedSeconds;
+          startPauseBtn.textContent = `Cancel (${graceLeft}s)`;
+        } else if (isCountup) {
+          startPauseBtn.textContent = state.elapsedSeconds >= 600 ? 'Finish & Save' : 'Give Up (<10m)';
+        } else {
+          startPauseBtn.textContent = 'Give Up';
+        }
+      } else if (isCountup) {
+        startPauseBtn.textContent = 'Start Timer Mode';
+      } else {
+        startPauseBtn.textContent = state.isRunning ? 'Pause' : state.timerMode === 'break' ? 'Start Break' : 'Start Focus';
+      }
+      document.title = state.isRunning ? `${formatted} · StudyFlow` : 'StudyFlow — Study Hub';
     }
 
     function switchTimerMode(mode) {
+      stopTimer();
       state.timerMode = mode;
-      timerModePill.textContent = mode === 'break' ? 'Break' : 'Focus';
+      state.elapsedSeconds = 0;
+      timerModePill.textContent = mode === 'break' ? 'Break' : mode === 'countup' ? 'Timer Mode' : 'Focus';
+      [
+        { btn: modeFocusBtn, key: 'focus' },
+        { btn: modeCountupBtn, key: 'countup' },
+        { btn: modeBreakBtn, key: 'break' }
+      ].forEach(({ btn, key }) => {
+        btn.className = key === mode
+          ? 'mode-switch-btn accent-bg py-2 rounded-lg text-xs font-semibold text-white transition'
+          : 'mode-switch-btn muted-text py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition';
+      });
+
       if (mode === 'break') {
-        modeBreakBtn.className = 'accent-bg py-2 rounded-lg text-xs font-semibold text-white transition';
-        modeFocusBtn.className = 'muted-text py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition';
         setDuration(10);
         timerStatus.textContent = 'Break time ready';
+      } else if (mode === 'countup') {
+        state.totalSeconds = 180 * 60;
+        state.remainingSeconds = 180 * 60;
+        timerStatus.textContent = 'Runs up to 3h (min 10m to count)';
+        updateTimerUI();
       } else {
-        modeFocusBtn.className = 'accent-bg py-2 rounded-lg text-xs font-semibold text-white transition';
-        modeBreakBtn.className = 'muted-text py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition';
         setDuration(50);
         timerStatus.textContent = 'Ready to focus';
       }
     }
 
     modeFocusBtn.addEventListener('click', () => switchTimerMode('focus'));
+    modeCountupBtn.addEventListener('click', () => switchTimerMode('countup'));
     modeBreakBtn.addEventListener('click', () => switchTimerMode('break'));
 
     let sharedAudioCtx = null;
@@ -1386,30 +1493,83 @@
       state.isRunning = false;
     }
 
+    function finishCountupSession() {
+      stopTimer();
+      const studiedMins = Math.floor(state.elapsedSeconds / 60);
+      if (state.elapsedSeconds >= 600) {
+        state.completedSessions += 1;
+        logStudyMinutes(studiedMins);
+        timerStatus.textContent = `Saved ${studiedMins} min session!`;
+        reminderBannerText.textContent = `Count Up complete! Saved ${studiedMins} minutes.`;
+        sendNotification('Focus Session Saved!', `Great job! ${studiedMins} minutes logged.`, 'studyflow-complete', false);
+        toastMsg.classList.remove('opacity-0');
+        playChime();
+      } else {
+        timerStatus.textContent = state.elapsedSeconds < 15 ? 'Cancelled within 15s' : 'Under 10 min — session not counted';
+      }
+      state.elapsedSeconds = 0;
+      updateTimerUI();
+    }
+
     function toggleTimer() {
       unlockAudio();
+
       if (state.isRunning) {
+        if (state.timerMode === 'countup') {
+          finishCountupSession();
+          return;
+        }
+        if (state.timerMode === 'break') {
+          stopTimer();
+          timerStatus.textContent = 'Break paused';
+          updateTimerUI();
+          return;
+        }
+        // Focus mode: <=15s cancels cleanly; >15s stops without counting if <10 min
         stopTimer();
-        timerStatus.textContent = 'Paused';
-        sendNotification('StudyFlow Paused', `${formatTime(state.remainingSeconds)} left`, 'studyflow-running', true);
+        if (state.elapsedSeconds < 15) {
+          state.remainingSeconds = state.totalSeconds;
+          timerStatus.textContent = 'Cancelled within 15s';
+        } else {
+          state.remainingSeconds = state.totalSeconds;
+          timerStatus.textContent = 'Stopped early — session not counted';
+        }
+        state.elapsedSeconds = 0;
         updateTimerUI();
         return;
       }
-      if (state.remainingSeconds <= 0) state.remainingSeconds = state.totalSeconds;
+
+      const isCountup = state.timerMode === 'countup';
+      if (!isCountup && state.remainingSeconds <= 0) state.remainingSeconds = state.totalSeconds;
       state.isRunning = true;
+      state.elapsedSeconds = 0;
+
+      const startTime = Date.now();
       const endTime = Date.now() + state.remainingSeconds * 1000;
       const topic = studyTopicInput.value.trim();
       timerStatus.textContent = topic ? `Focusing: ${topic}` : (state.timerMode === 'break' ? 'On a break...' : 'Focusing...');
       toastMsg.classList.add('opacity-0');
       updateTimerUI();
-      sendNotification(
-        state.timerMode === 'break' ? 'Break Timer Running' : 'Focus Timer Running',
-        `${formatTime(state.remainingSeconds)} remaining${topic ? ' · ' + topic : ''}`,
-        'studyflow-running',
-        true
-      );
 
       state.intervalId = setInterval(() => {
+        state.elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+
+        if (state.timerMode === 'countup') {
+          state.elapsedSeconds = Math.min(180 * 60, state.elapsedSeconds);
+          sendNotification(
+            'Timer Mode Running',
+            `${formatTime(state.elapsedSeconds)} elapsed${topic ? ' · ' + topic : ''}`,
+            'studyflow-running',
+            true
+          );
+          if (state.elapsedSeconds >= 180 * 60) {
+            finishCountupSession();
+            return;
+          }
+          updateTimerUI();
+          return;
+        }
+
         state.remainingSeconds = Math.max(0, Math.round((endTime - Date.now()) / 1000));
         if (state.remainingSeconds > 0) {
           sendNotification(
@@ -1421,6 +1581,7 @@
         }
         if (state.remainingSeconds <= 0) {
           state.remainingSeconds = 0;
+          state.elapsedSeconds = 0;
           stopTimer();
           if (state.timerMode === 'focus') {
             state.completedSessions += 1;
@@ -1437,6 +1598,16 @@
           reminderBanner.classList.add('flex');
           toastMsg.classList.remove('opacity-0');
           playChime();
+          if (autoPomoToggle && autoPomoToggle.checked) {
+            const nextMode = state.timerMode === 'focus' ? 'break' : 'focus';
+            const nextMins = nextMode === 'break' ? (Number(autoBreakMins.value) || 10) : (Number(customNumber.value) || 50);
+            setTimeout(() => {
+              state.timerMode = nextMode;
+              timerModePill.textContent = nextMode === 'break' ? 'Break' : 'Focus';
+              setDuration(nextMins);
+              toggleTimer();
+            }, 1500);
+          }
         }
         updateTimerUI();
       }, 1000);
@@ -1719,9 +1890,18 @@
     startPauseBtn.addEventListener('click', toggleTimer);
 
     resetBtn.addEventListener('click', () => {
+      const wasRunning = state.isRunning;
+      const elapsed = state.elapsedSeconds;
       stopTimer();
+      state.elapsedSeconds = 0;
       state.remainingSeconds = state.totalSeconds;
-      timerStatus.textContent = state.timerMode === 'break' ? 'Break time ready' : 'Ready to focus';
+      if (state.timerMode === 'break') {
+        timerStatus.textContent = 'Break time ready';
+      } else if (wasRunning && elapsed >= 15 && elapsed < 600) {
+        timerStatus.textContent = 'Reset after 15s (<10m) — not counted';
+      } else {
+        timerStatus.textContent = 'Ready to focus';
+      }
       toastMsg.classList.add('opacity-0');
       updateTimerUI();
     });
