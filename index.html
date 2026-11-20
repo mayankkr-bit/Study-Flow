@@ -19,13 +19,15 @@
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
       background-color: #020617;
       color: #f1f5f9;
-      transition: background 0.3s ease, color 0.3s ease;
+      
     }
+    * { -webkit-tap-highlight-color: transparent; }
+    button, input, select { touch-action: manipulation; }
     .progress-ring__circle {
       transition: stroke-dashoffset 0.35s linear;
-      transform: rotate(-90deg);
+      transform: rotate(-90deg) translateZ(0);
       transform-origin: 50% 50%;
-      filter: drop-shadow(0 0 10px var(--accent-soft));
+      will-change: stroke-dashoffset;
     }
     .accent-bg {
       background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
@@ -33,14 +35,10 @@
     }
     .accent-bg:hover { filter: brightness(1.08); }
     .surface-card {
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-    }
-    @keyframes ringGlow {
-      0%, 100% { filter: drop-shadow(0 0 8px var(--accent-soft)); }
-      50% { filter: drop-shadow(0 0 18px var(--accent)); }
+      transform: translateZ(0);
     }
     .ring-active {
-      animation: ringGlow 2.4s ease-in-out infinite;
+      filter: drop-shadow(0 0 10px var(--accent-soft));
     }
     .accent-text { color: var(--accent); }
     .accent-soft-bg { background-color: var(--accent-soft); }
@@ -54,7 +52,8 @@
       to { opacity: 1; transform: translateY(0); }
     }
     .tab-animate {
-      animation: tabFadeSlide 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform, opacity;
+      animation: tabFadeSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .fire-animate {
       display: inline-block;
@@ -62,38 +61,34 @@
       transform-origin: bottom center;
     }
 
-    /* Apple-style Liquid Glass UI (Dark & Light) */
+    /* Apple-style Liquid Glass UI (60fps GPU-optimized for mobile) */
     .surface-card {
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.52), rgba(15, 23, 42, 0.28)) !important;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.64), rgba(15, 23, 42, 0.42)) !important;
       border: 1px solid rgba(255, 255, 255, 0.16) !important;
-      backdrop-filter: blur(24px) saturate(180%) !important;
-      -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
-      box-shadow: 0 14px 38px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+      backdrop-filter: blur(12px) saturate(150%) !important;
+      -webkit-backdrop-filter: blur(12px) saturate(150%) !important;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
     }
     .surface-sub {
-      background: rgba(255, 255, 255, 0.06) !important;
+      background: rgba(255, 255, 255, 0.07) !important;
       border-color: rgba(255, 255, 255, 0.14) !important;
-      backdrop-filter: blur(14px) !important;
-      -webkit-backdrop-filter: blur(14px) !important;
     }
     body.theme-light {
       background-color: #e0f2fe;
       color: #0f172a;
     }
     body.theme-light .surface-card {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.30)) !important;
-      border: 1px solid rgba(255, 255, 255, 0.68) !important;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.46)) !important;
+      border: 1px solid rgba(255, 255, 255, 0.72) !important;
       color: #0f172a;
-      backdrop-filter: blur(24px) saturate(185%) !important;
-      -webkit-backdrop-filter: blur(24px) saturate(185%) !important;
-      box-shadow: 0 12px 34px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+      backdrop-filter: blur(12px) saturate(150%) !important;
+      -webkit-backdrop-filter: blur(12px) saturate(150%) !important;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
     }
     body.theme-light .surface-sub {
-      background: rgba(255, 255, 255, 0.40) !important;
-      border-color: rgba(255, 255, 255, 0.62) !important;
+      background: rgba(255, 255, 255, 0.48) !important;
+      border-color: rgba(255, 255, 255, 0.65) !important;
       color: #0f172a;
-      backdrop-filter: blur(14px) !important;
-      -webkit-backdrop-filter: blur(14px) !important;
     }
     body.theme-light .muted-text { color: #334155; }
 
@@ -683,7 +678,8 @@
       ambientVolume: 0.3,
       isPro: false,
       streakFreezes: 0,
-      unlockedRewards: {}
+      unlockedRewards: {},
+      activeSession: null
     };
 
     try {
@@ -705,6 +701,7 @@
         if (saved.isPro) state.isPro = true;
         state.streakFreezes = saved.streakFreezes ?? 0;
         if (saved.unlockedRewards) state.unlockedRewards = saved.unlockedRewards;
+        if (saved.activeSession) state.activeSession = saved.activeSession;
       }
     } catch (e) {}
 
@@ -726,7 +723,8 @@
           clockFont: state.clockFont,
           isPro: state.isPro,
           streakFreezes: state.streakFreezes,
-          unlockedRewards: state.unlockedRewards
+          unlockedRewards: state.unlockedRewards,
+          activeSession: state.activeSession
         }));
       } catch (e) {}
     }
@@ -738,6 +736,7 @@
       saveState();
       updateGoalUI();
       updateStreakUI();
+    resumeActiveSession();
       renderStats();
     }
 
@@ -939,6 +938,7 @@
           state.streakFreezes += 1;
           saveState();
           updateStreakUI();
+    resumeActiveSession();
         }
       };
       rewardModalTitle.textContent = 'Unlock Streak Freeze Shield';
@@ -1212,7 +1212,7 @@
         document.body.style.backgroundImage = `${overlay}, url('${WALLPAPERS[bg]}')`;
         document.body.style.backgroundSize = 'cover';
         document.body.style.backgroundPosition = 'center';
-        document.body.style.backgroundAttachment = 'fixed';
+        document.body.style.backgroundAttachment = 'scroll';
       } else if (bg) {
         document.body.classList.add(`bg-${bg}`);
       }
@@ -1488,13 +1488,17 @@
       updateTimerUI();
     }
 
-    function stopTimer() {
+    function stopTimer(keepSession) {
       if (state.intervalId) { clearInterval(state.intervalId); state.intervalId = null; }
       state.isRunning = false;
+      if (!keepSession) {
+        state.activeSession = null;
+        saveState();
+      }
     }
 
     function finishCountupSession() {
-      stopTimer();
+      stopTimer(false);
       const studiedMins = Math.floor(state.elapsedSeconds / 60);
       if (state.elapsedSeconds >= 600) {
         state.completedSessions += 1;
@@ -1547,6 +1551,20 @@
       const startTime = Date.now();
       const endTime = Date.now() + state.remainingSeconds * 1000;
       const topic = studyTopicInput.value.trim();
+      state.activeSession = {
+        timerMode: state.timerMode,
+        totalSeconds: state.totalSeconds,
+        startTime,
+        endTime,
+        topic
+      };
+      saveState();
+      startTimerInterval(startTime, endTime, topic);
+    }
+
+    function startTimerInterval(startTime, endTime, topic) {
+      if (state.intervalId) clearInterval(state.intervalId);
+      state.isRunning = true;
       timerStatus.textContent = topic ? `Focusing: ${topic}` : (state.timerMode === 'break' ? 'On a break...' : 'Focusing...');
       toastMsg.classList.add('opacity-0');
       updateTimerUI();
@@ -1985,6 +2003,7 @@
         saveState();
         updateProUI();
     updateStreakUI();
+    resumeActiveSession();
         proMsg.classList.remove('hidden');
         proCodeInput.value = '';
       }
@@ -1994,6 +2013,64 @@
       if (state.activeTab === 'calendar') renderExams();
       checkReminders();
     }, 1000);
+
+
+    function resumeActiveSession() {
+      const sess = state.activeSession;
+      if (!sess) return;
+      state.timerMode = sess.timerMode || 'focus';
+      state.totalSeconds = sess.totalSeconds || 50 * 60;
+      if (sess.topic) studyTopicInput.value = sess.topic;
+      timerModePill.textContent = state.timerMode === 'break' ? 'Break' : state.timerMode === 'countup' ? 'Timer Mode' : 'Focus';
+      [
+        { btn: modeFocusBtn, key: 'focus' },
+        { btn: modeCountupBtn, key: 'countup' },
+        { btn: modeBreakBtn, key: 'break' }
+      ].forEach(({ btn, key }) => {
+        btn.className = key === state.timerMode
+          ? 'mode-switch-btn accent-bg py-2 rounded-lg text-xs font-semibold text-white transition'
+          : 'mode-switch-btn muted-text py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition';
+      });
+
+      const now = Date.now();
+      if (state.timerMode === 'countup') {
+        state.elapsedSeconds = Math.min(180 * 60, Math.max(0, Math.floor((now - sess.startTime) / 1000)));
+        if (state.elapsedSeconds >= 180 * 60) {
+          finishCountupSession();
+        } else {
+          startTimerInterval(sess.startTime, sess.endTime, sess.topic || '');
+        }
+        return;
+      }
+
+      state.elapsedSeconds = Math.max(0, Math.floor((now - sess.startTime) / 1000));
+      state.remainingSeconds = Math.max(0, Math.round((sess.endTime - now) / 1000));
+      if (state.remainingSeconds <= 0) {
+        stopTimer(false);
+        if (state.timerMode === 'focus') {
+          state.completedSessions += 1;
+          logStudyMinutes(Math.round(state.totalSeconds / 60));
+          timerStatus.textContent = 'Completed while away! Great job.';
+          reminderBannerText.textContent = 'Focus session finished while away! Study time saved.';
+          sendNotification('Focus Session Complete!', 'Your study time has been saved.', 'studyflow-complete', false);
+        } else {
+          timerStatus.textContent = 'Break finished!';
+        }
+        reminderBanner.classList.remove('hidden');
+        reminderBanner.classList.add('flex');
+        toastMsg.classList.remove('opacity-0');
+        state.elapsedSeconds = 0;
+        updateTimerUI();
+      } else {
+        startTimerInterval(sess.startTime, sess.endTime, sess.topic || '');
+      }
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && state.activeSession) {
+        resumeActiveSession();
+      }
+    });
 
     // Initial render
     updateNotifUI();
@@ -2010,6 +2087,7 @@
     renderReminders();
     updateProUI();
     updateStreakUI();
+    resumeActiveSession();
   </script>
 </body>
 </html>
