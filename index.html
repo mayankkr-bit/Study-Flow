@@ -47,13 +47,21 @@
       0%, 100% { transform: scale(1) rotate(-2deg); filter: drop-shadow(0 0 6px rgba(249, 115, 22, 0.7)); }
       50% { transform: scale(1.12) rotate(3deg); filter: drop-shadow(0 0 11px rgba(251, 146, 60, 0.95)); }
     }
-    @keyframes tabFadeSlide {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+    @keyframes tabSlideInRight {
+      from { opacity: 0; transform: translate3d(18px, 0, 0) scale(0.985); }
+      to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
     }
-    .tab-animate {
+    @keyframes tabSlideInLeft {
+      from { opacity: 0; transform: translate3d(-18px, 0, 0) scale(0.985); }
+      to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+    }
+    .tab-enter-right {
       will-change: transform, opacity;
-      animation: tabFadeSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: tabSlideInRight 250ms ease-out both;
+    }
+    .tab-enter-left {
+      will-change: transform, opacity;
+      animation: tabSlideInLeft 250ms ease-out both;
     }
     .fire-animate {
       display: inline-block;
@@ -92,8 +100,12 @@
     }
     body.theme-light .muted-text { color: #334155; }
 
-    button, .nav-tab { transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s ease, background 0.25s ease; }
+    button, .nav-tab {
+      will-change: transform, opacity;
+      transition: transform 250ms ease-out, opacity 250ms ease-out;
+    }
     button:active { transform: scale(0.96); }
+    .nav-tab.is-active-tab { transform: translate3d(0, -2px, 0) scale(1.03); }
 
     body.bg-crimson {
       background: radial-gradient(circle at 18% 18%, rgba(239, 68, 68, 0.42), transparent 46%),
@@ -134,6 +146,111 @@
       background: radial-gradient(circle at 20% 15%, rgba(233, 213, 255, 0.85), transparent 46%),
                   radial-gradient(circle at 82% 82%, rgba(186, 230, 253, 0.85), transparent 50%),
                   linear-gradient(135deg, #faf5ff 0%, #e0f2fe 100%);
+    }
+
+    /* Contrast Side-Lighting inside Clock Circle */
+    .clock-circle-lit {
+      position: relative;
+      border-radius: 9999px;
+      background: radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.72) 48%, rgba(2, 6, 23, 0.96) 100%);
+      box-shadow:
+        inset 18px 0 30px -12px var(--accent),
+        inset -18px 0 30px -12px rgba(224, 242, 254, 0.48),
+        inset 0 0 26px rgba(0, 0, 0, 0.85),
+        0 12px 32px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+    }
+    .clock-circle-lit::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+      background:
+        radial-gradient(ellipse 36% 72% at 0% 50%, var(--accent-soft), transparent 72%),
+        radial-gradient(ellipse 36% 72% at 100% 50%, rgba(248, 250, 252, 0.24), transparent 72%);
+      pointer-events: none;
+    }
+
+    /* Lock mode buttons while a timer is active */
+    .mode-switch-btn.is-locked {
+      opacity: 0.45;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+
+    /* Regain-Style Full-Screen Focus Page (60fps GPU-composited transform & opacity only) */
+    #focus-fullscreen-overlay {
+      background: radial-gradient(circle at 50% 42%, #0b1120 0%, #020617 72%, #000000 100%);
+      opacity: 0;
+      transform: translate3d(0, 18px, 0) scale(0.96);
+      visibility: hidden;
+      pointer-events: none;
+      will-change: transform, opacity;
+      transition: opacity 250ms ease-out, transform 250ms ease-out, visibility 0s linear 250ms;
+    }
+    #focus-fullscreen-overlay.is-open {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1);
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity 250ms ease-out, transform 250ms ease-out, visibility 0s linear 0s;
+    }
+    #focus-fullscreen-overlay .fs-clock-wrap {
+      opacity: 0;
+      transform: translate3d(0, 12px, 0) scale(0.92);
+      will-change: transform, opacity;
+      transition: opacity 250ms ease-out, transform 250ms ease-out;
+    }
+    #focus-fullscreen-overlay.is-open .fs-clock-wrap {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    #focus-fullscreen-overlay .fs-controls-wrap {
+      opacity: 0;
+      transform: translate3d(0, 16px, 0);
+      will-change: transform, opacity;
+      transition: opacity 250ms ease-out 40ms, transform 250ms ease-out 40ms;
+    }
+    #focus-fullscreen-overlay.is-open .fs-controls-wrap {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+    /* Liquid Glass Exit Confirmation Modal */
+    #fs-confirm-modal {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      will-change: opacity;
+      transition: opacity 220ms ease-out, visibility 0s linear 220ms;
+    }
+    #fs-confirm-modal.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity 220ms ease-out, visibility 0s linear 0s;
+    }
+    #fs-confirm-modal .fs-confirm-card {
+      opacity: 0;
+      transform: translate3d(0, 14px, 0) scale(0.95);
+      will-change: transform, opacity;
+      transition: opacity 220ms ease-out, transform 220ms ease-out;
+    }
+    #fs-confirm-modal.is-open .fs-confirm-card {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #focus-fullscreen-overlay,
+      #focus-fullscreen-overlay .fs-clock-wrap,
+      #focus-fullscreen-overlay .fs-controls-wrap,
+      #fs-confirm-modal,
+      #fs-confirm-modal .fs-confirm-card,
+      .tab-enter-right,
+      .tab-enter-left {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+      }
     }
   </style>
 </head>
@@ -204,7 +321,7 @@
       </div>
 
       <section class="flex flex-col items-center justify-center py-2">
-        <div class="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
+        <div class="clock-circle-lit relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
           <svg class="w-full h-full" viewBox="0 0 220 220">
             <circle class="text-slate-800/35" stroke="currentColor" stroke-width="12" fill="transparent" r="96" cx="110" cy="110" />
             <circle id="progress-circle" class="progress-ring__circle accent-text" stroke="currentColor" stroke-width="12" stroke-linecap="round" fill="transparent" r="96" cx="110" cy="110" />
@@ -223,7 +340,6 @@
 
       <div class="flex items-center gap-3">
         <button id="start-pause-btn" type="button" class="accent-bg flex-1 py-3.5 px-5 rounded-2xl active:scale-[0.99] text-white font-semibold text-sm transition shadow-lg">Start Focus</button>
-        <button id="reset-btn" type="button" class="surface-sub py-3.5 px-5 rounded-2xl bg-slate-800 hover:bg-slate-700 font-semibold text-sm transition">Reset</button>
       </div>
 
       <div class="space-y-3 pt-2 border-t border-slate-800/30">
@@ -584,6 +700,63 @@
   </div>
 
 
+  <!-- Regain-Style Full-Screen Focus Page (Clock, Pause, End Session only) -->
+  <div id="focus-fullscreen-overlay" aria-hidden="true" class="fixed inset-0 z-50 flex flex-col items-center justify-center gap-10 p-6 select-none">
+    <div class="fs-clock-wrap clock-circle-lit relative w-72 h-72 sm:w-80 sm:h-80 flex items-center justify-center">
+      <svg class="w-full h-full relative z-10" viewBox="0 0 220 220">
+        <circle class="text-slate-800/40" stroke="currentColor" stroke-width="10" fill="transparent" r="96" cx="110" cy="110" />
+        <circle id="fs-progress-circle" class="progress-ring__circle accent-text ring-active" stroke="currentColor" stroke-width="10" stroke-linecap="round" fill="transparent" r="96" cx="110" cy="110" />
+      </svg>
+      <div class="absolute inset-0 z-20 flex items-center justify-center">
+        <span id="fs-timer-display" class="text-5xl sm:text-6xl font-bold tracking-tight tabular-nums text-slate-50 drop-shadow-md">50:00</span>
+      </div>
+    </div>
+
+    <div class="fs-controls-wrap flex items-center justify-center gap-6">
+      <button id="fs-pause-btn" type="button" aria-label="Pause" title="Pause" class="w-16 h-16 rounded-full bg-white/10 hover:bg-white/15 border border-white/15 text-slate-100 flex items-center justify-center shadow-lg">
+        <svg id="fs-icon-pause" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <rect x="6" y="4" width="4" height="16" rx="1.5" />
+          <rect x="14" y="4" width="4" height="16" rx="1.5" />
+        </svg>
+        <svg id="fs-icon-play" class="hidden w-6 h-6 translate-x-0.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M6.5 4.8a1.2 1.2 0 0 1 1.82-1.03l11.2 6.72a1.2 1.2 0 0 1 0 2.06l-11.2 6.72A1.2 1.2 0 0 1 6.5 18.24V4.8z" />
+        </svg>
+      </button>
+
+      <button id="fs-end-btn" type="button" aria-label="End Session" title="End Session" class="relative w-16 h-16 rounded-full bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 text-red-300 flex items-center justify-center shadow-lg">
+        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="6" y="6" width="12" height="12" rx="2.5" fill="currentColor" stroke="none" />
+        </svg>
+        <span id="fs-grace-badge" class="hidden absolute -top-1.5 -right-1.5 min-w-[26px] h-5 px-1.5 rounded-full bg-slate-900/95 border border-red-400/50 text-[10px] font-bold tabular-nums text-red-200 flex items-center justify-center shadow">15s</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Liquid Glass Exit Confirmation Popup -->
+  <div id="fs-confirm-modal" aria-hidden="true" class="fixed inset-0 z-[60] bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-5">
+    <div class="fs-confirm-card surface-card rounded-3xl max-w-sm w-full p-6 space-y-4 text-center">
+      <div class="w-12 h-12 mx-auto rounded-2xl bg-red-500/15 border border-red-400/30 text-red-300 flex items-center justify-center">
+        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 8v4" />
+          <path d="M12 16h.01" />
+        </svg>
+      </div>
+      <h3 class="text-lg font-bold tracking-tight text-slate-100">End Focus Session?</h3>
+      <p id="fs-confirm-desc" class="text-xs leading-relaxed text-slate-300">
+        You're doing great. Stopping before 10 minutes won't save this session to your stats.
+      </p>
+      <div class="flex items-center gap-2.5 pt-1">
+        <button id="fs-confirm-keep-btn" type="button" class="accent-bg flex-1 py-3 px-4 rounded-2xl text-white text-xs font-semibold shadow-lg">
+          Keep Focusing
+        </button>
+        <button id="fs-confirm-end-btn" type="button" class="flex-1 py-3 px-4 rounded-2xl bg-red-500/20 hover:bg-red-500/30 border border-red-500/40 text-red-200 text-xs font-semibold">
+          End Session
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- BOTTOM NAVIGATION DOCK (Well-spaced tabs at the bottom!) -->
   <nav aria-label="Primary navigation" class="fixed bottom-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-2xl z-40">
     <div class="surface-card bg-slate-900/95 border border-slate-800 rounded-2xl shadow-2xl px-3 py-2 flex items-center justify-around gap-2 backdrop-blur-lg">
@@ -649,6 +822,7 @@
       totalSeconds: 50 * 60,
       remainingSeconds: 50 * 60,
       isRunning: false,
+      isPaused: false,
       intervalId: null,
       completedSessions: 0,
       studiedMinutesToday: 0,
@@ -777,7 +951,6 @@
     const timerDisplay = document.getElementById('timer-display');
     const timerStatus = document.getElementById('timer-status');
     const startPauseBtn = document.getElementById('start-pause-btn');
-    const resetBtn = document.getElementById('reset-btn');
     const customRange = document.getElementById('custom-range');
     const customNumber = document.getElementById('custom-number');
     const customLabel = document.getElementById('custom-label');
@@ -789,6 +962,19 @@
     const autoBreakMins = document.getElementById('auto-break-mins');
     const toastMsg = document.getElementById('toast-msg');
     const studyTopicInput = document.getElementById('study-topic');
+    const focusOverlay = document.getElementById('focus-fullscreen-overlay');
+    const fsProgressCircle = document.getElementById('fs-progress-circle');
+    const fsTimerDisplay = document.getElementById('fs-timer-display');
+    const fsPauseBtn = document.getElementById('fs-pause-btn');
+    const fsIconPause = document.getElementById('fs-icon-pause');
+    const fsIconPlay = document.getElementById('fs-icon-play');
+    const fsEndBtn = document.getElementById('fs-end-btn');
+    const fsGraceBadge = document.getElementById('fs-grace-badge');
+    const fsConfirmModal = document.getElementById('fs-confirm-modal');
+    const fsConfirmDesc = document.getElementById('fs-confirm-desc');
+    const fsConfirmKeepBtn = document.getElementById('fs-confirm-keep-btn');
+    const fsConfirmEndBtn = document.getElementById('fs-confirm-end-btn');
+    const modeSwitchButtons = document.querySelectorAll('.mode-switch-btn');
 
     const goalTitleInput = document.getElementById('goal-title');
     const goalTargetInput = document.getElementById('goal-target');
@@ -855,6 +1041,8 @@
     const circumference = 2 * Math.PI * radius;
     progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
     progressCircle.style.strokeDashoffset = 0;
+    fsProgressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+    fsProgressCircle.style.strokeDashoffset = 0;
 
 
     function calculateStreak() {
@@ -1013,17 +1201,24 @@
       } catch (e) {}
     });
 
-    // Bottom Tab Switching
+    // Bottom Tab Switching (60fps directional transform + opacity transition)
+    const TAB_ORDER = ['timer', 'stats', 'tasks', 'calendar', 'more'];
     function switchTab(tab) {
+      if (state.activeTab === tab) return;
+      const prevIdx = TAB_ORDER.indexOf(state.activeTab);
+      const nextIdx = TAB_ORDER.indexOf(tab);
+      const animClass = nextIdx >= prevIdx ? 'tab-enter-right' : 'tab-enter-left';
       state.activeTab = tab;
+
       const views = { timer: viewTimer, stats: viewStats, tasks: viewTasks, calendar: viewCalendar, more: viewMore };
       Object.entries(views).forEach(([k, el]) => {
         const active = k === tab;
+        el.classList.remove('tab-enter-right', 'tab-enter-left');
         el.classList.toggle('hidden', !active);
-        el.classList.remove('tab-animate');
         if (active) {
-          void el.offsetWidth;
-          el.classList.add('tab-animate');
+          requestAnimationFrame(() => {
+            el.classList.add(animClass);
+          });
         }
       });
 
@@ -1035,8 +1230,8 @@
         { btn: tabMoreBtn, key: 'more' }
       ].forEach(({ btn, key }) => {
         btn.className = key === tab
-          ? 'nav-tab accent-bg text-white flex-1 py-2 px-2 rounded-xl flex flex-col items-center gap-1 text-[11px] font-semibold transition'
-          : 'nav-tab muted-text text-slate-400 flex-1 py-2 px-2 rounded-xl flex flex-col items-center gap-1 text-[11px] font-semibold transition';
+          ? 'nav-tab is-active-tab accent-bg text-white flex-1 py-2 px-2 rounded-xl flex flex-col items-center gap-1 text-[11px] font-semibold'
+          : 'nav-tab muted-text text-slate-400 flex-1 py-2 px-2 rounded-xl flex flex-col items-center gap-1 text-[11px] font-semibold opacity-80';
       });
 
       if (tab === 'stats') renderStats();
@@ -1250,6 +1445,7 @@
       else if (fontKey === 'cinzel') family = "'Cinzel', Georgia, serif";
       document.body.style.fontFamily = family;
       timerDisplay.style.fontFamily = family;
+      fsTimerDisplay.style.fontFamily = family;
       fontButtons.forEach((btn) => {
         const active = btn.dataset.font === fontKey;
         btn.classList.toggle('accent-border', active);
@@ -1376,37 +1572,87 @@
       goalPercent.textContent = pct >= 100 ? 'Goal reached!' : `${pct}% complete`;
     }
 
+    function openFocusOverlay() {
+      focusOverlay.setAttribute('aria-hidden', 'false');
+      requestAnimationFrame(() => {
+        focusOverlay.classList.add('is-open');
+      });
+      document.body.style.overflow = 'hidden';
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+    }
+
+    function closeFocusOverlay() {
+      focusOverlay.classList.remove('is-open');
+      focusOverlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
     function updateTimerUI() {
       const isCountup = state.timerMode === 'countup';
       const displaySec = isCountup ? state.elapsedSeconds : state.remainingSeconds;
       const formatted = formatTime(displaySec);
       timerDisplay.textContent = formatted;
+      fsTimerDisplay.textContent = formatted;
+
       const progress = isCountup
         ? Math.min(1, state.elapsedSeconds / (180 * 60))
         : (state.totalSeconds > 0 ? state.remainingSeconds / state.totalSeconds : 0);
-      progressCircle.style.strokeDashoffset = circumference * (1 - progress);
+      const offset = circumference * (1 - progress);
+      progressCircle.style.strokeDashoffset = offset;
+      fsProgressCircle.style.strokeDashoffset = offset;
+
       sessionCountEl.textContent = state.completedSessions;
       progressCircle.classList.toggle('ring-active', state.isRunning);
+      fsProgressCircle.classList.toggle('ring-active', state.isRunning);
 
-      if (state.isRunning && state.timerMode !== 'break') {
-        if (state.elapsedSeconds < 15) {
-          const graceLeft = 15 - state.elapsedSeconds;
+      const locked = state.isRunning || state.isPaused;
+      modeSwitchButtons.forEach((btn) => {
+        btn.disabled = locked;
+        btn.classList.toggle('is-locked', locked);
+      });
+
+      fsIconPause.classList.toggle('hidden', state.isPaused);
+      fsIconPlay.classList.toggle('hidden', !state.isPaused);
+      fsPauseBtn.setAttribute('aria-label', state.isPaused ? 'Resume' : 'Pause');
+      fsPauseBtn.setAttribute('title', state.isPaused ? 'Resume' : 'Pause');
+
+      if ((state.isRunning || state.isPaused) && state.timerMode !== 'break') {
+        if (state.elapsedSeconds <= 15) {
+          const graceLeft = Math.max(0, 15 - state.elapsedSeconds);
           startPauseBtn.textContent = `Cancel (${graceLeft}s)`;
+          fsGraceBadge.textContent = `${graceLeft}s`;
+          fsGraceBadge.classList.remove('hidden');
+          fsEndBtn.setAttribute('aria-label', `Cancel (${graceLeft}s)`);
         } else if (isCountup) {
           startPauseBtn.textContent = state.elapsedSeconds >= 600 ? 'Finish & Save' : 'Give Up (<10m)';
+          fsGraceBadge.classList.add('hidden');
+          fsEndBtn.setAttribute('aria-label', state.elapsedSeconds >= 600 ? 'Finish & Save' : 'End Session');
         } else {
           startPauseBtn.textContent = 'Give Up';
+          fsGraceBadge.classList.add('hidden');
+          fsEndBtn.setAttribute('aria-label', 'End Session');
         }
       } else if (isCountup) {
         startPauseBtn.textContent = 'Start Timer Mode';
+        fsGraceBadge.classList.add('hidden');
+        fsEndBtn.setAttribute('aria-label', 'End Session');
       } else {
         startPauseBtn.textContent = state.isRunning ? 'Pause' : state.timerMode === 'break' ? 'Start Break' : 'Start Focus';
+        fsGraceBadge.classList.add('hidden');
+        fsEndBtn.setAttribute('aria-label', 'End Session');
       }
       document.title = state.isRunning ? `${formatted} · StudyFlow` : 'StudyFlow — Study Hub';
     }
 
     function switchTimerMode(mode) {
-      stopTimer();
+      if (state.isRunning || state.isPaused || state.timerMode === mode) {
+        return;
+      }
       state.timerMode = mode;
       state.elapsedSeconds = 0;
       timerModePill.textContent = mode === 'break' ? 'Break' : mode === 'countup' ? 'Timer Mode' : 'Focus';
@@ -1492,6 +1738,7 @@
       if (state.intervalId) { clearInterval(state.intervalId); state.intervalId = null; }
       state.isRunning = false;
       if (!keepSession) {
+        state.isPaused = false;
         state.activeSession = null;
         saveState();
       }
@@ -1499,6 +1746,7 @@
 
     function finishCountupSession() {
       stopTimer(false);
+      closeFocusOverlay();
       const studiedMins = Math.floor(state.elapsedSeconds / 60);
       if (state.elapsedSeconds >= 600) {
         state.completedSessions += 1;
@@ -1509,43 +1757,115 @@
         toastMsg.classList.remove('opacity-0');
         playChime();
       } else {
-        timerStatus.textContent = state.elapsedSeconds < 15 ? 'Cancelled within 15s' : 'Under 10 min — session not counted';
+        timerStatus.textContent = state.elapsedSeconds <= 15 ? 'Cancelled within 15s' : 'Under 10 min — session not counted';
       }
       state.elapsedSeconds = 0;
       updateTimerUI();
     }
 
+    function toggleFocusPause() {
+      if (!state.isRunning && !state.isPaused) return;
+      if (state.isRunning) {
+        stopTimer(true);
+        state.isPaused = true;
+        if (state.activeSession) {
+          state.activeSession.isPaused = true;
+          state.activeSession.pausedElapsed = state.elapsedSeconds;
+          state.activeSession.pausedRemaining = state.remainingSeconds;
+          saveState();
+        }
+        timerStatus.textContent = 'Paused';
+        updateTimerUI();
+      } else {
+        state.isPaused = false;
+        const topic = studyTopicInput.value.trim();
+        const startTime = Date.now() - state.elapsedSeconds * 1000;
+        const endTime = Date.now() + state.remainingSeconds * 1000;
+        state.activeSession = {
+          timerMode: state.timerMode,
+          totalSeconds: state.totalSeconds,
+          startTime,
+          endTime,
+          topic,
+          isPaused: false
+        };
+        saveState();
+        startTimerInterval(startTime, endTime, topic);
+      }
+    }
+
+    function openExitConfirmModal() {
+      if (state.elapsedSeconds >= 600) {
+        const minsDone = Math.floor(state.elapsedSeconds / 60);
+        fsConfirmDesc.textContent = `You've focused for ${minsDone} min so far. Your completed minutes will be saved to your stats.`;
+      } else {
+        fsConfirmDesc.textContent = "You're doing great. Stopping before 10 minutes won't save this session to your stats.";
+      }
+      fsConfirmModal.setAttribute('aria-hidden', 'false');
+      requestAnimationFrame(() => {
+        fsConfirmModal.classList.add('is-open');
+      });
+    }
+
+    function closeExitConfirmModal() {
+      fsConfirmModal.classList.remove('is-open');
+      fsConfirmModal.setAttribute('aria-hidden', 'true');
+    }
+
+    function handleFocusExitClick() {
+      if (state.timerMode === 'break' || state.elapsedSeconds <= 15) {
+        endFocusSession();
+        return;
+      }
+      openExitConfirmModal();
+    }
+
+    function endFocusSession() {
+      closeExitConfirmModal();
+      if (state.timerMode === 'countup') {
+        finishCountupSession();
+        return;
+      }
+      const elapsed = state.elapsedSeconds;
+      stopTimer(false);
+      closeFocusOverlay();
+      if (state.timerMode === 'break') {
+        state.remainingSeconds = state.totalSeconds;
+        timerStatus.textContent = 'Break ended';
+      } else if (elapsed <= 15) {
+        state.remainingSeconds = state.totalSeconds;
+        timerStatus.textContent = 'Cancelled within 15s';
+      } else if (elapsed >= 600) {
+        const studiedMins = Math.floor(elapsed / 60);
+        state.completedSessions += 1;
+        logStudyMinutes(studiedMins);
+        state.remainingSeconds = state.totalSeconds;
+        timerStatus.textContent = `Saved ${studiedMins} min session!`;
+      } else {
+        state.remainingSeconds = state.totalSeconds;
+        timerStatus.textContent = 'Ended early — session not counted';
+      }
+      state.elapsedSeconds = 0;
+      updateTimerUI();
+    }
+
+    fsPauseBtn.addEventListener('click', toggleFocusPause);
+    fsEndBtn.addEventListener('click', handleFocusExitClick);
+    fsConfirmKeepBtn.addEventListener('click', closeExitConfirmModal);
+    fsConfirmEndBtn.addEventListener('click', endFocusSession);
+
     function toggleTimer() {
       unlockAudio();
 
-      if (state.isRunning) {
-        if (state.timerMode === 'countup') {
-          finishCountupSession();
-          return;
-        }
-        if (state.timerMode === 'break') {
-          stopTimer();
-          timerStatus.textContent = 'Break paused';
-          updateTimerUI();
-          return;
-        }
-        // Focus mode: <=15s cancels cleanly; >15s stops without counting if <10 min
-        stopTimer();
-        if (state.elapsedSeconds < 15) {
-          state.remainingSeconds = state.totalSeconds;
-          timerStatus.textContent = 'Cancelled within 15s';
-        } else {
-          state.remainingSeconds = state.totalSeconds;
-          timerStatus.textContent = 'Stopped early — session not counted';
-        }
-        state.elapsedSeconds = 0;
-        updateTimerUI();
+      if (state.isRunning || state.isPaused) {
+        endFocusSession();
         return;
       }
 
       const isCountup = state.timerMode === 'countup';
       if (!isCountup && state.remainingSeconds <= 0) state.remainingSeconds = state.totalSeconds;
       state.isRunning = true;
+      state.isPaused = false;
       state.elapsedSeconds = 0;
 
       const startTime = Date.now();
@@ -1556,21 +1876,24 @@
         totalSeconds: state.totalSeconds,
         startTime,
         endTime,
-        topic
+        topic,
+        isPaused: false
       };
       saveState();
+      openFocusOverlay();
       startTimerInterval(startTime, endTime, topic);
     }
 
     function startTimerInterval(startTime, endTime, topic) {
       if (state.intervalId) clearInterval(state.intervalId);
       state.isRunning = true;
+      state.isPaused = false;
       timerStatus.textContent = topic ? `Focusing: ${topic}` : (state.timerMode === 'break' ? 'On a break...' : 'Focusing...');
       toastMsg.classList.add('opacity-0');
       updateTimerUI();
 
       state.intervalId = setInterval(() => {
-        state.elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+        state.elapsedSeconds = Math.max(0, Math.round((Date.now() - startTime) / 1000));
 
         if (state.timerMode === 'countup') {
           state.elapsedSeconds = Math.min(180 * 60, state.elapsedSeconds);
@@ -1600,7 +1923,8 @@
         if (state.remainingSeconds <= 0) {
           state.remainingSeconds = 0;
           state.elapsedSeconds = 0;
-          stopTimer();
+          stopTimer(false);
+          closeFocusOverlay();
           if (state.timerMode === 'focus') {
             state.completedSessions += 1;
             logStudyMinutes(Math.round(state.totalSeconds / 60));
@@ -1907,23 +2231,6 @@
     customNumber.addEventListener('change', (e) => setDuration(e.target.value));
     startPauseBtn.addEventListener('click', toggleTimer);
 
-    resetBtn.addEventListener('click', () => {
-      const wasRunning = state.isRunning;
-      const elapsed = state.elapsedSeconds;
-      stopTimer();
-      state.elapsedSeconds = 0;
-      state.remainingSeconds = state.totalSeconds;
-      if (state.timerMode === 'break') {
-        timerStatus.textContent = 'Break time ready';
-      } else if (wasRunning && elapsed >= 15 && elapsed < 600) {
-        timerStatus.textContent = 'Reset after 15s (<10m) — not counted';
-      } else {
-        timerStatus.textContent = 'Ready to focus';
-      }
-      toastMsg.classList.add('opacity-0');
-      updateTimerUI();
-    });
-
     goalTitleInput.addEventListener('input', (e) => { state.goalTitle = e.target.value; saveState(); });
     goalTargetInput.addEventListener('change', (e) => {
       state.goalTargetMinutes = Math.max(10, Math.min(720, Number(e.target.value) || 120));
@@ -2032,12 +2339,24 @@
           : 'mode-switch-btn muted-text py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition';
       });
 
+      if (sess.isPaused) {
+        state.isRunning = false;
+        state.isPaused = true;
+        state.elapsedSeconds = sess.pausedElapsed || 0;
+        state.remainingSeconds = sess.pausedRemaining ?? state.totalSeconds;
+        timerStatus.textContent = 'Paused';
+        openFocusOverlay();
+        updateTimerUI();
+        return;
+      }
+
       const now = Date.now();
       if (state.timerMode === 'countup') {
         state.elapsedSeconds = Math.min(180 * 60, Math.max(0, Math.floor((now - sess.startTime) / 1000)));
         if (state.elapsedSeconds >= 180 * 60) {
           finishCountupSession();
         } else {
+          openFocusOverlay();
           startTimerInterval(sess.startTime, sess.endTime, sess.topic || '');
         }
         return;
@@ -2047,6 +2366,7 @@
       state.remainingSeconds = Math.max(0, Math.round((sess.endTime - now) / 1000));
       if (state.remainingSeconds <= 0) {
         stopTimer(false);
+        closeFocusOverlay();
         if (state.timerMode === 'focus') {
           state.completedSessions += 1;
           logStudyMinutes(Math.round(state.totalSeconds / 60));
@@ -2062,6 +2382,7 @@
         state.elapsedSeconds = 0;
         updateTimerUI();
       } else {
+        openFocusOverlay();
         startTimerInterval(sess.startTime, sess.endTime, sess.topic || '');
       }
     }
