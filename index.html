@@ -95,19 +95,24 @@
       color: #0f172a;
     }
     body.theme-light .surface-card {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.46)) !important;
-      border: 1px solid rgba(255, 255, 255, 0.72) !important;
+      background: rgba(255, 255, 255, 0.78) !important;
+      border: 1px solid rgba(255, 255, 255, 0.82) !important;
       color: #0f172a;
       backdrop-filter: blur(12px) saturate(150%) !important;
       -webkit-backdrop-filter: blur(12px) saturate(150%) !important;
-      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
     }
     body.theme-light .surface-sub {
-      background: rgba(255, 255, 255, 0.48) !important;
-      border-color: rgba(255, 255, 255, 0.65) !important;
+      background: rgba(255, 255, 255, 0.62) !important;
+      border-color: rgba(255, 255, 255, 0.78) !important;
       color: #0f172a;
     }
     body.theme-light .muted-text { color: #334155; }
+    body.theme-light #notif-status-pill.text-emerald-400,
+    body.theme-light #pro-status-badge.text-emerald-400 {
+      color: #047857;
+      background-color: rgba(16, 185, 129, 0.18);
+    }
     body.theme-light .clock-circle-lit { color: #f8fafc; }
     body.theme-light .clock-circle-lit .muted-text { color: #cbd5e1; }
     body.theme-light #fs-confirm-modal .surface-card {
@@ -123,45 +128,57 @@
     button:active { transform: scale(0.96); }
     .nav-tab.is-active-tab { transform: translate3d(0, -2px, 0) scale(1.03); }
 
-    body.bg-crimson {
-      background: radial-gradient(circle at 18% 18%, rgba(239, 68, 68, 0.42), transparent 46%),
-                  radial-gradient(circle at 84% 78%, rgba(249, 115, 22, 0.34), transparent 50%),
-                  linear-gradient(135deg, #09050a 0%, #1c070d 55%, #0a0a0f 100%);
+    /* Dedicated Fixed Background Layer (crisp, viewport-scaled, no blur) */
+    #app-bg-layer {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100dvh;
+      z-index: -1;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      pointer-events: none;
     }
-    body.theme-light.bg-crimson {
-      background: radial-gradient(circle at 18% 18%, rgba(254, 202, 202, 0.85), transparent 46%),
-                  radial-gradient(circle at 84% 78%, rgba(254, 215, 170, 0.85), transparent 50%),
-                  linear-gradient(135deg, #fff1f2 0%, #ffedd5 100%);
+    #app-bg-layer.bg-crimson {
+      background-image: radial-gradient(circle at 18% 18%, rgba(239, 68, 68, 0.42), transparent 46%),
+                        radial-gradient(circle at 84% 78%, rgba(249, 115, 22, 0.34), transparent 50%),
+                        linear-gradient(135deg, #09050a 0%, #1c070d 55%, #0a0a0f 100%);
     }
-    body.bg-aurora {
-      background: radial-gradient(circle at 15% 25%, rgba(20, 184, 166, 0.38), transparent 48%),
-                  radial-gradient(circle at 85% 75%, rgba(99, 102, 241, 0.42), transparent 52%),
-                  linear-gradient(135deg, #03151e 0%, #071932 55%, #090d1f 100%);
+    body.theme-light #app-bg-layer.bg-crimson {
+      background-image: radial-gradient(circle at 18% 18%, rgba(254, 202, 202, 0.85), transparent 46%),
+                        radial-gradient(circle at 84% 78%, rgba(254, 215, 170, 0.85), transparent 50%),
+                        linear-gradient(135deg, #fff1f2 0%, #ffedd5 100%);
     }
-    body.theme-light.bg-aurora {
-      background: radial-gradient(circle at 15% 25%, rgba(153, 246, 228, 0.75), transparent 48%),
-                  radial-gradient(circle at 85% 75%, rgba(199, 210, 254, 0.75), transparent 52%),
-                  linear-gradient(135deg, #ecfeff 0%, #eef2ff 100%);
+    #app-bg-layer.bg-aurora {
+      background-image: radial-gradient(circle at 15% 25%, rgba(20, 184, 166, 0.38), transparent 48%),
+                        radial-gradient(circle at 85% 75%, rgba(99, 102, 241, 0.42), transparent 52%),
+                        linear-gradient(135deg, #03151e 0%, #071932 55%, #090d1f 100%);
     }
-    body.bg-sunset {
-      background: radial-gradient(circle at 20% 20%, rgba(244, 63, 94, 0.42), transparent 48%),
-                  radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.35), transparent 50%),
-                  linear-gradient(135deg, #1a0814 0%, #240c1e 50%, #12081a 100%);
+    body.theme-light #app-bg-layer.bg-aurora {
+      background-image: radial-gradient(circle at 15% 25%, rgba(153, 246, 228, 0.75), transparent 48%),
+                        radial-gradient(circle at 85% 75%, rgba(199, 210, 254, 0.75), transparent 52%),
+                        linear-gradient(135deg, #ecfeff 0%, #eef2ff 100%);
     }
-    body.theme-light.bg-sunset {
-      background: radial-gradient(circle at 20% 20%, rgba(254, 205, 211, 0.85), transparent 48%),
-                  radial-gradient(circle at 80% 80%, rgba(253, 230, 138, 0.85), transparent 50%),
-                  linear-gradient(135deg, #fff1f2 0%, #fef3c7 100%);
+    #app-bg-layer.bg-sunset {
+      background-image: radial-gradient(circle at 20% 20%, rgba(244, 63, 94, 0.42), transparent 48%),
+                        radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.35), transparent 50%),
+                        linear-gradient(135deg, #1a0814 0%, #240c1e 50%, #12081a 100%);
     }
-    body.bg-cosmic {
-      background: radial-gradient(circle at 20% 15%, rgba(168, 85, 247, 0.42), transparent 46%),
-                  radial-gradient(circle at 82% 82%, rgba(56, 189, 248, 0.36), transparent 50%),
-                  linear-gradient(135deg, #090517 0%, #13092b 55%, #050b1a 100%);
+    body.theme-light #app-bg-layer.bg-sunset {
+      background-image: radial-gradient(circle at 20% 20%, rgba(254, 205, 211, 0.85), transparent 48%),
+                        radial-gradient(circle at 80% 80%, rgba(253, 230, 138, 0.85), transparent 50%),
+                        linear-gradient(135deg, #fff1f2 0%, #fef3c7 100%);
     }
-    body.theme-light.bg-cosmic {
-      background: radial-gradient(circle at 20% 15%, rgba(233, 213, 255, 0.85), transparent 46%),
-                  radial-gradient(circle at 82% 82%, rgba(186, 230, 253, 0.85), transparent 50%),
-                  linear-gradient(135deg, #faf5ff 0%, #e0f2fe 100%);
+    #app-bg-layer.bg-cosmic {
+      background-image: radial-gradient(circle at 20% 15%, rgba(168, 85, 247, 0.42), transparent 46%),
+                        radial-gradient(circle at 82% 82%, rgba(56, 189, 248, 0.36), transparent 50%),
+                        linear-gradient(135deg, #090517 0%, #13092b 55%, #050b1a 100%);
+    }
+    body.theme-light #app-bg-layer.bg-cosmic {
+      background-image: radial-gradient(circle at 20% 15%, rgba(233, 213, 255, 0.85), transparent 46%),
+                        radial-gradient(circle at 82% 82%, rgba(186, 230, 253, 0.85), transparent 50%),
+                        linear-gradient(135deg, #faf5ff 0%, #e0f2fe 100%);
     }
 
     /* Contrast Side-Lighting inside Clock Circle */
@@ -375,7 +392,8 @@
     }
   </style>
 </head>
-<body class="min-h-screen p-3 sm:p-6 pb-28 bg-crimson">
+<body class="min-h-screen p-3 sm:p-6 pb-28">
+  <div id="app-bg-layer" class="bg-crimson" aria-hidden="true"></div>
   <div class="w-full max-w-3xl mx-auto space-y-4">
     <!-- Active Reminder / Timer Alert Banner -->
     <div
@@ -1225,6 +1243,7 @@
     }
 
     // DOM References
+    const appBgLayer = document.getElementById('app-bg-layer');
     const notifyPermBtn = document.getElementById('notify-perm-btn');
     const notifStatusPill = document.getElementById('notif-status-pill');
     const testNotifBtn = document.getElementById('test-notif-btn');
@@ -1712,22 +1731,18 @@
 
     function applyBackground(bg) {
       state.bgStyle = bg;
-      document.body.classList.remove('bg-crimson', 'bg-aurora', 'bg-sunset', 'bg-cosmic');
-      document.body.style.backgroundImage = '';
-      document.body.style.backgroundSize = '';
-      document.body.style.backgroundPosition = '';
-      document.body.style.backgroundAttachment = '';
+      if (appBgLayer) {
+        appBgLayer.classList.remove('bg-crimson', 'bg-aurora', 'bg-sunset', 'bg-cosmic');
+        appBgLayer.style.backgroundImage = '';
 
-      if (WALLPAPERS[bg]) {
-        const overlay = state.colorMode === 'light'
-          ? 'linear-gradient(rgba(240, 249, 255, 0.15), rgba(240, 249, 255, 0.15))'
-          : 'linear-gradient(rgba(2, 6, 23, 0.28), rgba(2, 6, 23, 0.28))';
-        document.body.style.backgroundImage = `${overlay}, url('${WALLPAPERS[bg]}')`;
-        document.body.style.backgroundSize = 'cover';
-        document.body.style.backgroundPosition = 'center';
-        document.body.style.backgroundAttachment = 'scroll';
-      } else if (bg) {
-        document.body.classList.add(`bg-${bg}`);
+        if (WALLPAPERS[bg]) {
+          const overlay = state.colorMode === 'light'
+            ? 'linear-gradient(rgba(240, 249, 255, 0.15), rgba(240, 249, 255, 0.15))'
+            : 'linear-gradient(rgba(2, 6, 23, 0.28), rgba(2, 6, 23, 0.28))';
+          appBgLayer.style.backgroundImage = `${overlay}, url('${WALLPAPERS[bg]}')`;
+        } else if (bg) {
+          appBgLayer.classList.add(`bg-${bg}`);
+        }
       }
 
       bgButtons.forEach((btn) => {
