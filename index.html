@@ -41,8 +41,17 @@
       filter: drop-shadow(0 0 10px var(--accent-soft));
     }
     .accent-text { color: var(--accent); }
-    .accent-soft-bg { background-color: var(--accent-soft); }
-    .accent-border { border-color: var(--accent); }
+    .accent-soft-bg,
+    .surface-sub.accent-soft-bg,
+    body.theme-light .surface-sub.accent-soft-bg {
+      background: var(--accent-soft) !important;
+    }
+    .accent-border,
+    .surface-sub.accent-border,
+    body.theme-light .surface-sub.accent-border {
+      border-color: var(--accent) !important;
+      box-shadow: 0 0 0 1px var(--accent-soft);
+    }
     @keyframes flameFlicker {
       0%, 100% { transform: scale(1) rotate(-2deg); filter: drop-shadow(0 0 6px rgba(249, 115, 22, 0.7)); }
       50% { transform: scale(1.12) rotate(3deg); filter: drop-shadow(0 0 11px rgba(251, 146, 60, 0.95)); }
@@ -99,6 +108,13 @@
       color: #0f172a;
     }
     body.theme-light .muted-text { color: #334155; }
+    body.theme-light .clock-circle-lit { color: #f8fafc; }
+    body.theme-light .clock-circle-lit .muted-text { color: #cbd5e1; }
+    body.theme-light #fs-confirm-modal .surface-card {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.88), rgba(15, 23, 42, 0.76)) !important;
+      border-color: rgba(255, 255, 255, 0.18) !important;
+      color: #f1f5f9;
+    }
 
     button, .nav-tab {
       will-change: transform, opacity;
@@ -240,12 +256,117 @@
       transform: translate3d(0, 0, 0) scale(1);
     }
 
+    /* Global Floating Draggable Study Buddy Companion */
+    #global-study-buddy {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 55;
+      touch-action: none;
+      will-change: transform;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    #global-study-buddy.is-snapping {
+      transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    #global-study-buddy.is-dragging .buddy-float {
+      animation: none;
+      transform: scale(1.06);
+    }
+    @keyframes buddyFloat {
+      0%, 100% { transform: translate3d(0, 0, 0); }
+      50% { transform: translate3d(0, -5px, 0); }
+    }
+    @keyframes buddyBlink {
+      0%, 90%, 100% { transform: scaleY(1); }
+      94% { transform: scaleY(0.08); }
+    }
+    .buddy-float {
+      will-change: transform;
+      animation: buddyFloat 3.6s ease-in-out infinite;
+    }
+    .buddy-eyes {
+      transform-box: fill-box;
+      transform-origin: center;
+      will-change: transform;
+      animation: buddyBlink 4.8s ease-in-out infinite;
+    }
+    #buddy-speech-bubble {
+      position: absolute;
+      top: 50%;
+      width: min(232px, calc(100vw - 92px));
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.88), rgba(45, 10, 22, 0.84));
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(14px) saturate(150%);
+      -webkit-backdrop-filter: blur(14px) saturate(150%);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      will-change: transform, opacity;
+      transition: opacity 220ms ease-out, transform 220ms ease-out, visibility 0s linear 220ms;
+    }
+    #buddy-speech-bubble.is-bubble-left {
+      right: calc(100% + 12px);
+      left: auto;
+      transform-origin: right center;
+      transform: translate3d(8px, -50%, 0) scale(0.94);
+    }
+    #buddy-speech-bubble.is-bubble-right {
+      left: calc(100% + 12px);
+      right: auto;
+      transform-origin: left center;
+      transform: translate3d(-8px, -50%, 0) scale(0.94);
+    }
+    #buddy-speech-bubble.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translate3d(0, -50%, 0) scale(1);
+      transition: opacity 220ms ease-out, transform 220ms ease-out, visibility 0s linear 0s;
+    }
+    #buddy-speech-bubble::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 10px;
+      height: 10px;
+      background: rgba(26, 14, 24, 0.92);
+    }
+    #buddy-speech-bubble.is-bubble-left::before {
+      right: -6px;
+      left: auto;
+      transform: translateY(-50%) rotate(45deg);
+      border-right: 1px solid rgba(255, 255, 255, 0.18);
+      border-top: 1px solid rgba(255, 255, 255, 0.18);
+    }
+    #buddy-speech-bubble.is-bubble-right::before {
+      left: -6px;
+      right: auto;
+      transform: translateY(-50%) rotate(45deg);
+      border-left: 1px solid rgba(255, 255, 255, 0.18);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+    }
+    #fs-buddy-text {
+      transition: opacity 200ms ease-out, transform 200ms ease-out;
+    }
+    #fs-buddy-text.is-swapping {
+      opacity: 0;
+      transform: translate3d(0, 4px, 0);
+    }
+
     @media (prefers-reduced-motion: reduce) {
       #focus-fullscreen-overlay,
       #focus-fullscreen-overlay .fs-clock-wrap,
       #focus-fullscreen-overlay .fs-controls-wrap,
+      #global-study-buddy,
+      #buddy-speech-bubble,
       #fs-confirm-modal,
       #fs-confirm-modal .fs-confirm-card,
+      #fs-buddy-text,
+      .buddy-float,
+      .buddy-eyes,
       .tab-enter-right,
       .tab-enter-left {
         transition-duration: 0.01ms !important;
@@ -644,6 +765,17 @@
             <input id="ambient-vol" type="range" min="1" max="100" value="30" class="w-full accent-sky-500 cursor-pointer" />
           </div>
         </div>
+
+        <div class="surface-sub bg-slate-950/60 border border-slate-800 rounded-2xl p-4 flex items-center justify-between gap-3">
+          <div>
+            <p class="text-sm font-semibold">Floating Study Buddy</p>
+            <p class="muted-text text-xs text-slate-400">Show draggable companion across tabs &amp; Focus mode</p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer shrink-0">
+            <input id="study-buddy-toggle" type="checkbox" checked class="sr-only peer" aria-label="Toggle Floating Study Buddy" />
+            <div class="w-11 h-6 bg-slate-700/80 border border-white/15 rounded-full peer peer-checked:bg-[var(--accent)] transition-colors after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:bg-white after:rounded-full after:h-[18px] after:w-[18px] after:shadow after:transition-transform peer-checked:after:translate-x-5"></div>
+          </label>
+        </div>
       </section>
 
       <!-- Support, Privacy & Contact -->
@@ -700,7 +832,7 @@
   </div>
 
 
-  <!-- Regain-Style Full-Screen Focus Page (Clock, Pause, End Session only) -->
+  <!-- Regain-Style Full-Screen Focus Page -->
   <div id="focus-fullscreen-overlay" aria-hidden="true" class="fixed inset-0 z-50 flex flex-col items-center justify-center gap-10 p-6 select-none">
     <div class="fs-clock-wrap clock-circle-lit relative w-72 h-72 sm:w-80 sm:h-80 flex items-center justify-center">
       <svg class="w-full h-full relative z-10" viewBox="0 0 220 220">
@@ -732,14 +864,105 @@
     </div>
   </div>
 
+  <!-- Global Floating Finger-Draggable Study Buddy -->
+  <div id="global-study-buddy" aria-label="Floating Study Buddy">
+    <div class="relative w-14 h-14">
+      <button id="buddy-avatar-btn" type="button" aria-label="Study Buddy — drag to move, tap to talk" title="Drag anywhere or tap to talk" class="buddy-float w-14 h-14 rounded-2xl flex items-center justify-center focus:outline-none cursor-grab active:cursor-grabbing">
+        <svg viewBox="0 0 64 64" class="w-full h-full drop-shadow-[0_8px_18px_rgba(239,68,68,0.42)]" aria-hidden="true">
+          <defs>
+            <linearGradient id="buddyHeadGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#3b0c18" stop-opacity="0.96" />
+              <stop offset="55%" stop-color="#1f0710" stop-opacity="0.94" />
+              <stop offset="100%" stop-color="#0f0409" stop-opacity="0.98" />
+            </linearGradient>
+            <linearGradient id="buddyRimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fda4af" stop-opacity="0.72" />
+              <stop offset="45%" stop-color="#ef4444" stop-opacity="0.6" />
+              <stop offset="100%" stop-color="#ffffff" stop-opacity="0.18" />
+            </linearGradient>
+            <linearGradient id="buddyGloss" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.3" />
+              <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+            </linearGradient>
+            <filter id="buddyEyeGlow" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="1.8" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+          <!-- Frosted Dark-Crimson Rounded Head -->
+          <rect x="6" y="8" width="52" height="48" rx="18" fill="url(#buddyHeadGrad)" stroke="url(#buddyRimGrad)" stroke-width="1.6" />
+          <!-- Top Liquid Glass Specular Highlight -->
+          <path d="M16 12 H48 C51.5 12 54 14.5 54 18 V22 C44 18 20 18 10 22 V18 C10 14.5 12.5 12 16 12 Z" fill="url(#buddyGloss)" />
+          <!-- Subtle Side Glow Accents -->
+          <ellipse cx="14" cy="34" rx="4" ry="8" fill="#ef4444" opacity="0.18" />
+          <ellipse cx="50" cy="34" rx="4" ry="8" fill="#f97316" opacity="0.14" />
+          <!-- FOCUSING: Determined Glowing Eyes -->
+          <g id="buddy-face-focus">
+            <g class="buddy-eyes" filter="url(#buddyEyeGlow)">
+              <path d="M19 26.5 L27 28.5 L27 33.5 A3.5 3.5 0 0 1 19 33.5 Z" fill="#fff1f2" />
+              <path d="M45 26.5 L37 28.5 L37 33.5 A3.5 3.5 0 0 0 45 33.5 Z" fill="#fff1f2" />
+              <circle cx="24" cy="30.2" r="1.2" fill="#ffffff" />
+              <circle cx="40" cy="30.2" r="1.2" fill="#ffffff" />
+            </g>
+            <path d="M28 43.2 Q32 45.2 36 43.2" fill="none" stroke="#fda4af" stroke-width="1.8" stroke-linecap="round" opacity="0.82" />
+          </g>
+
+          <!-- PAUSED: Calm / Waiting Eyes -->
+          <g id="buddy-face-paused" class="hidden">
+            <g filter="url(#buddyEyeGlow)">
+              <rect x="19" y="30" width="8" height="3.2" rx="1.6" fill="#fecdd3" opacity="0.92" />
+              <rect x="37" y="30" width="8" height="3.2" rx="1.6" fill="#fecdd3" opacity="0.92" />
+            </g>
+            <path d="M28.5 43.2 Q32 45 35.5 43.2" fill="none" stroke="#fda4af" stroke-width="1.6" stroke-linecap="round" opacity="0.65" />
+          </g>
+
+          <!-- COMPLETED: Happy Celebrating Eyes -->
+          <g id="buddy-face-completed" class="hidden">
+            <g filter="url(#buddyEyeGlow)">
+              <path d="M18.5 33 Q23 26.5 27.5 33" fill="none" stroke="#fff1f2" stroke-width="2.8" stroke-linecap="round" />
+              <path d="M36.5 33 Q41 26.5 45.5 33" fill="none" stroke="#fff1f2" stroke-width="2.8" stroke-linecap="round" />
+              <circle cx="15" cy="22" r="1.3" fill="#fde047" />
+              <circle cx="49" cy="22" r="1.3" fill="#fde047" />
+            </g>
+            <path d="M26 41.5 Q32 47.5 38 41.5" fill="none" stroke="#fecdd3" stroke-width="2" stroke-linecap="round" />
+          </g>
+        </svg>
+      </button>
+
+      <!-- Auto-Positioned Frosted Speech Bubble -->
+      <div id="buddy-speech-bubble" role="button" tabindex="0" aria-hidden="true" title="Tap for next tip" class="is-bubble-left rounded-2xl px-3.5 py-2.5 text-left cursor-pointer">
+        <div class="flex items-center justify-between gap-2 mb-1">
+          <p id="fs-buddy-tag" class="text-[10px] font-semibold uppercase tracking-wider text-rose-300/90 leading-none">Study Buddy</p>
+          <span class="text-[9px] text-slate-400/80 leading-none">next &rsaquo;</span>
+        </div>
+        <p id="fs-buddy-text" class="text-xs leading-snug text-slate-100/95 font-medium">Locked in. Stay steady and own this session.</p>
+      </div>
+    </div>
+  </div>
+
   <!-- Liquid Glass Exit Confirmation Popup -->
   <div id="fs-confirm-modal" aria-hidden="true" class="fixed inset-0 z-[60] bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-5">
     <div class="fs-confirm-card surface-card rounded-3xl max-w-sm w-full p-6 space-y-4 text-center">
-      <div class="w-12 h-12 mx-auto rounded-2xl bg-red-500/15 border border-red-400/30 text-red-300 flex items-center justify-center">
-        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="9" />
-          <path d="M12 8v4" />
-          <path d="M12 16h.01" />
+      <div class="buddy-float w-16 h-16 mx-auto">
+        <svg viewBox="0 0 64 64" class="w-full h-full drop-shadow-[0_6px_16px_rgba(239,68,68,0.4)]" aria-hidden="true">
+          <rect x="6" y="8" width="52" height="48" rx="18" fill="url(#buddyHeadGrad)" stroke="url(#buddyRimGrad)" stroke-width="1.6" />
+          <path d="M16 12 H48 C51.5 12 54 14.5 54 18 V22 C44 18 20 18 10 22 V18 C10 14.5 12.5 12 16 12 Z" fill="url(#buddyGloss)" />
+          <!-- Pleading / Concerned Eyes & Brows -->
+          <g filter="url(#buddyEyeGlow)">
+            <path d="M18 24.5 Q22.5 22 26.5 23.5" fill="none" stroke="#fda4af" stroke-width="1.7" stroke-linecap="round" />
+            <path d="M46 24.5 Q41.5 22 37.5 23.5" fill="none" stroke="#fda4af" stroke-width="1.7" stroke-linecap="round" />
+            <ellipse cx="23" cy="31.5" rx="4.2" ry="5.2" fill="#fff1f2" />
+            <ellipse cx="41" cy="31.5" rx="4.2" ry="5.2" fill="#fff1f2" />
+            <circle cx="24.5" cy="29.4" r="1.6" fill="#ffffff" />
+            <circle cx="42.5" cy="29.4" r="1.6" fill="#ffffff" />
+            <circle cx="21.4" cy="33.5" r="0.9" fill="#fda4af" />
+            <circle cx="39.4" cy="33.5" r="0.9" fill="#fda4af" />
+          </g>
+          <!-- Concerned Mouth -->
+          <path d="M27.5 45 Q32 41.8 36.5 45" fill="none" stroke="#fda4af" stroke-width="1.8" stroke-linecap="round" opacity="0.85" />
         </svg>
       </div>
       <h3 class="text-lg font-bold tracking-tight text-slate-100">End Focus Session?</h3>
@@ -853,6 +1076,7 @@
       isPro: false,
       streakFreezes: 0,
       unlockedRewards: {},
+      studyBuddyEnabled: true,
       activeSession: null
     };
 
@@ -875,6 +1099,7 @@
         if (saved.isPro) state.isPro = true;
         state.streakFreezes = saved.streakFreezes ?? 0;
         if (saved.unlockedRewards) state.unlockedRewards = saved.unlockedRewards;
+        if (typeof saved.studyBuddyEnabled === 'boolean') state.studyBuddyEnabled = saved.studyBuddyEnabled;
         if (saved.activeSession) state.activeSession = saved.activeSession;
       }
     } catch (e) {}
@@ -898,20 +1123,105 @@
           isPro: state.isPro,
           streakFreezes: state.streakFreezes,
           unlockedRewards: state.unlockedRewards,
+          studyBuddyEnabled: state.studyBuddyEnabled,
           activeSession: state.activeSession
         }));
       } catch (e) {}
     }
 
-    function logStudyMinutes(mins) {
-      const key = toDateKey(new Date());
-      state.studyLog[key] = (state.studyLog[key] || 0) + mins;
-      state.studiedMinutesToday = state.studyLog[key];
+    function logStudyMinutes(mins, startTimeMs, endTimeMs) {
+      const totalMins = Math.max(0, Math.round(Number(mins) || 0));
+      if (totalMins <= 0) return;
+
+      if (typeof startTimeMs === 'number' && typeof endTimeMs === 'number' && endTimeMs > startTimeMs) {
+        const buckets = [];
+        let cursor = startTimeMs;
+        while (cursor < endTimeMs) {
+          const d = new Date(cursor);
+          const nextMidnight = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1, 0, 0, 0, 0).getTime();
+          const segmentEnd = Math.min(endTimeMs, nextMidnight);
+          buckets.push({ key: toDateKey(d), ms: segmentEnd - cursor });
+          cursor = segmentEnd;
+        }
+
+        if (buckets.length === 1) {
+          const k = buckets[0].key;
+          state.studyLog[k] = (state.studyLog[k] || 0) + totalMins;
+        } else {
+          const totalMs = endTimeMs - startTimeMs;
+          let assigned = 0;
+          const parts = buckets.map((b) => {
+            const exact = (b.ms / totalMs) * totalMins;
+            const floored = Math.floor(exact);
+            assigned += floored;
+            return { key: b.key, mins: floored, frac: exact - floored };
+          });
+          let remainder = totalMins - assigned;
+          const byFrac = [...parts].sort((a, b) => b.frac - a.frac);
+          for (let i = 0; i < remainder; i++) {
+            byFrac[i % byFrac.length].mins += 1;
+          }
+          parts.forEach((p) => {
+            if (p.mins > 0) {
+              state.studyLog[p.key] = (state.studyLog[p.key] || 0) + p.mins;
+            }
+          });
+        }
+      } else {
+        const key = toDateKey(new Date());
+        state.studyLog[key] = (state.studyLog[key] || 0) + totalMins;
+      }
+
+      const currentTodayKey = toDateKey(new Date());
+      state.studiedMinutesToday = state.studyLog[currentTodayKey] || 0;
       saveState();
       updateGoalUI();
       updateStreakUI();
-    resumeActiveSession();
       renderStats();
+    }
+
+    function creditLiveMinutes(upToMs, isFinal) {
+      const sess = state.activeSession;
+      if (!sess || state.timerMode === 'break') return 0;
+
+      let refTime = typeof upToMs === 'number' ? upToMs : Date.now();
+      if (state.timerMode === 'focus' && typeof sess.endTime === 'number') {
+        refTime = Math.min(refTime, sess.endTime);
+      } else if (state.timerMode === 'countup') {
+        refTime = Math.min(refTime, sess.startTime + 180 * 60 * 1000);
+      }
+
+      const elapsedSec = Math.max(0, Math.round((refTime - sess.startTime) / 1000));
+      if (elapsedSec < 600) return 0;
+
+      let totalEarnedMins = Math.floor(elapsedSec / 60);
+      if (isFinal && state.timerMode === 'focus' && typeof sess.endTime === 'number' && refTime >= sess.endTime) {
+        totalEarnedMins = Math.round(state.totalSeconds / 60);
+      }
+
+      const alreadyCredited = sess.creditedMinutes || 0;
+      if (sess.lastCreditedTime == null) {
+        const creditFrom = sess.startTime;
+        const creditTo = sess.startTime + totalEarnedMins * 60 * 1000;
+        logStudyMinutes(totalEarnedMins, creditFrom, creditTo);
+        sess.lastCreditedTime = creditTo;
+        sess.creditedMinutes = totalEarnedMins;
+        saveState();
+        return totalEarnedMins;
+      }
+
+      const deltaMins = totalEarnedMins - alreadyCredited;
+      if (deltaMins >= 1) {
+        const creditFrom = sess.lastCreditedTime;
+        const creditTo = creditFrom + deltaMins * 60 * 1000;
+        logStudyMinutes(deltaMins, creditFrom, creditTo);
+        sess.lastCreditedTime = creditTo;
+        sess.creditedMinutes = totalEarnedMins;
+        saveState();
+        return deltaMins;
+      }
+
+      return 0;
     }
 
     // DOM References
@@ -963,6 +1273,15 @@
     const toastMsg = document.getElementById('toast-msg');
     const studyTopicInput = document.getElementById('study-topic');
     const focusOverlay = document.getElementById('focus-fullscreen-overlay');
+    const globalBuddy = document.getElementById('global-study-buddy');
+    const studyBuddyToggle = document.getElementById('study-buddy-toggle');
+    const buddyAvatarBtn = document.getElementById('buddy-avatar-btn');
+    const buddySpeechBubble = document.getElementById('buddy-speech-bubble');
+    const fsBuddyTag = document.getElementById('fs-buddy-tag');
+    const fsBuddyText = document.getElementById('fs-buddy-text');
+    const buddyFaceFocus = document.getElementById('buddy-face-focus');
+    const buddyFacePaused = document.getElementById('buddy-face-paused');
+    const buddyFaceCompleted = document.getElementById('buddy-face-completed');
     const fsProgressCircle = document.getElementById('fs-progress-circle');
     const fsTimerDisplay = document.getElementById('fs-timer-display');
     const fsPauseBtn = document.getElementById('fs-pause-btn');
@@ -1126,7 +1445,6 @@
           state.streakFreezes += 1;
           saveState();
           updateStreakUI();
-    resumeActiveSession();
         }
       };
       rewardModalTitle.textContent = 'Unlock Streak Freeze Shield';
@@ -1572,8 +1890,385 @@
       goalPercent.textContent = pct >= 100 ? 'Goal reached!' : `${pct}% complete`;
     }
 
+    let buddyIntervalId = null;
+    let buddyMsgIndex = 0;
+
+    function getStudyBuddyMessages() {
+      let stored = null;
+      try {
+        stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      } catch (e) {}
+
+      const todos = (stored && Array.isArray(stored.todos)) ? stored.todos : state.todos;
+      const exams = (stored && Array.isArray(stored.exams)) ? stored.exams : state.exams;
+      const goalTarget = (stored && stored.goalTargetMinutes) || state.goalTargetMinutes || 120;
+      const studyLog = (stored && stored.studyLog) || state.studyLog || {};
+      const minsToday = studyLog[toDateKey(new Date())] || state.studiedMinutesToday || 0;
+      const topic = studyTopicInput.value.trim();
+
+      if (state.timerMode === 'break') {
+        return [
+          { tag: 'Break Mode', text: 'Step away from the screen, stretch, and hydrate.' },
+          { tag: 'Recharge', text: 'Short breaks lock in memory. Relax for a few minutes.' },
+          { tag: 'Study Buddy', text: 'Deep breath in... you earned this reset.' }
+        ];
+      }
+
+      const pool = [];
+
+      if (topic) {
+        pool.push({ tag: 'Current Focus', text: `Dialed in on "${topic}". Keep your momentum rolling.` });
+      }
+
+      const pendingTodos = todos.filter((t) => !t.done);
+      if (pendingTodos.length > 0) {
+        const nextTask = pendingTodos[0];
+        const subj = nextTask.subject ? ` (${nextTask.subject})` : '';
+        pool.push({ tag: 'Pending Task', text: `Up next: ${nextTask.text}${subj}. One focused block at a time.` });
+        if (pendingTodos.length > 1) {
+          pool.push({ tag: 'Task List', text: `${pendingTodos.length} pending tasks on your list — every minute chips them down.` });
+        }
+      }
+
+      const nowMs = Date.now();
+      const upcomingExams = exams
+        .map((e) => ({ name: e.name, diff: new Date(e.datetime).getTime() - nowMs }))
+        .filter((e) => !isNaN(e.diff) && e.diff > 0)
+        .sort((a, b) => a.diff - b.diff);
+
+      if (upcomingExams.length > 0) {
+        const soonest = upcomingExams[0];
+        const days = Math.floor(soonest.diff / 86400000);
+        const hrs = Math.floor((soonest.diff % 86400000) / 3600000);
+        const timeStr = days > 0 ? `${days}d ${hrs}h` : `${Math.max(1, hrs)}h`;
+        pool.push({ tag: 'Exam Countdown', text: `${soonest.name} is in ${timeStr}. This session puts you ahead.` });
+      }
+
+      const remainingGoal = Math.max(0, goalTarget - minsToday);
+      if (remainingGoal > 0) {
+        pool.push({ tag: 'Daily Goal', text: `${minsToday}m logged today — ${remainingGoal}m left to hit your daily goal.` });
+      } else {
+        pool.push({ tag: 'Goal Crushed', text: `Daily goal hit (${minsToday}m)! Every extra minute is pure bonus.` });
+      }
+
+      pool.push(
+        { tag: 'Study Buddy', text: 'Stay steady. Distractions can wait until the ring closes.' },
+        { tag: 'Deep Focus', text: 'Quiet consistency beats last-minute cramming every time.' },
+        { tag: 'Keep Going', text: 'Future you is going to be glad you stayed locked in right now.' }
+      );
+
+      return pool;
+    }
+
+    function updateStudyBuddy(advance) {
+      if (!fsBuddyText || !fsBuddyTag) return;
+      const pool = getStudyBuddyMessages();
+      if (pool.length === 0) return;
+      if (advance) {
+        buddyMsgIndex = (buddyMsgIndex + 1) % pool.length;
+      } else {
+        buddyMsgIndex = buddyMsgIndex % pool.length;
+      }
+      const next = pool[buddyMsgIndex];
+      fsBuddyText.classList.add('is-swapping');
+      setTimeout(() => {
+        fsBuddyTag.textContent = next.tag;
+        fsBuddyText.textContent = next.text;
+        fsBuddyText.classList.remove('is-swapping');
+      }, 180);
+    }
+
+    let buddyMood = 'focus';
+    let celebrationTimeoutId = null;
+    let buddyBubbleOpen = false;
+    let isFocusOverlayOpen = false;
+    const BUDDY_SIZE = 56;
+    const BUDDY_EDGE_MARGIN = 12;
+    const BUDDY_POS_KEY = 'studyflow_buddy_pos_v1';
+
+    let buddyPos = { x: 12, y: 120, side: 'right' };
+    let preFocusBuddyPos = null;
+
+    function getBuddyVerticalBounds() {
+      const topMin = 16;
+      const bottomSafe = isFocusOverlayOpen ? 24 : 96;
+      const maxY = Math.max(topMin, window.innerHeight - BUDDY_SIZE - bottomSafe);
+      return { minY: topMin, maxY };
+    }
+
+    function updateBubbleSide(side) {
+      if (!buddySpeechBubble) return;
+      const openRight = side === 'left';
+      buddySpeechBubble.classList.toggle('is-bubble-right', openRight);
+      buddySpeechBubble.classList.toggle('is-bubble-left', !openRight);
+    }
+
+    function applyBuddyPosition(x, y, animate) {
+      if (!globalBuddy) return;
+      buddyPos.x = x;
+      buddyPos.y = y;
+      globalBuddy.classList.toggle('is-snapping', !!animate);
+      globalBuddy.style.transform = `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0)`;
+    }
+
+    function snapBuddyToEdge(animate) {
+      const vw = window.innerWidth;
+      const { minY, maxY } = getBuddyVerticalBounds();
+      const centerX = buddyPos.x + BUDDY_SIZE / 2;
+      const side = centerX < vw / 2 ? 'left' : 'right';
+      const targetX = side === 'left' ? BUDDY_EDGE_MARGIN : Math.max(BUDDY_EDGE_MARGIN, vw - BUDDY_SIZE - BUDDY_EDGE_MARGIN);
+      const targetY = Math.max(minY, Math.min(maxY, buddyPos.y));
+      buddyPos.side = side;
+      updateBubbleSide(side);
+      applyBuddyPosition(targetX, targetY, animate);
+      if (!isFocusOverlayOpen) {
+        try {
+          localStorage.setItem(BUDDY_POS_KEY, JSON.stringify({
+            side,
+            yRatio: maxY > minY ? (targetY - minY) / (maxY - minY) : 0.85
+          }));
+        } catch (e) {}
+      }
+    }
+
+    function initBuddyPosition() {
+      const vw = window.innerWidth;
+      const { minY, maxY } = getBuddyVerticalBounds();
+      let savedPos = null;
+      try {
+        savedPos = JSON.parse(localStorage.getItem(BUDDY_POS_KEY));
+      } catch (e) {}
+      const side = (savedPos && (savedPos.side === 'left' || savedPos.side === 'right')) ? savedPos.side : 'right';
+      const yRatio = (savedPos && typeof savedPos.yRatio === 'number') ? Math.max(0, Math.min(1, savedPos.yRatio)) : 0.92;
+      const x = side === 'left' ? BUDDY_EDGE_MARGIN : Math.max(BUDDY_EDGE_MARGIN, vw - BUDDY_SIZE - BUDDY_EDGE_MARGIN);
+      const y = minY + yRatio * (maxY - minY);
+      buddyPos.side = side;
+      updateBubbleSide(side);
+      applyBuddyPosition(x, y, false);
+    }
+
+    function setBuddyBubbleOpen(open) {
+      buddyBubbleOpen = !!open;
+      if (!buddySpeechBubble) return;
+      buddySpeechBubble.classList.toggle('is-open', buddyBubbleOpen);
+      buddySpeechBubble.setAttribute('aria-hidden', buddyBubbleOpen ? 'false' : 'true');
+    }
+
+    function applyStudyBuddyVisibility(enabled) {
+      state.studyBuddyEnabled = !!enabled;
+      if (studyBuddyToggle) studyBuddyToggle.checked = state.studyBuddyEnabled;
+      if (globalBuddy) {
+        globalBuddy.classList.toggle('hidden', !state.studyBuddyEnabled);
+        globalBuddy.setAttribute('aria-hidden', state.studyBuddyEnabled ? 'false' : 'true');
+      }
+      if (!state.studyBuddyEnabled) {
+        setBuddyBubbleOpen(false);
+        stopStudyBuddyLoop();
+      } else if (isFocusOverlayOpen) {
+        startStudyBuddyLoop();
+        setBuddyBubbleOpen(true);
+      } else {
+        snapBuddyToEdge(false);
+      }
+    }
+
+    if (studyBuddyToggle) {
+      studyBuddyToggle.addEventListener('change', () => {
+        applyStudyBuddyVisibility(studyBuddyToggle.checked);
+        saveState();
+      });
+    }
+
+    function setBuddyMood(mood) {
+      buddyMood = mood;
+      if (buddyFaceFocus) buddyFaceFocus.classList.toggle('hidden', mood !== 'focus');
+      if (buddyFacePaused) buddyFacePaused.classList.toggle('hidden', mood !== 'paused');
+      if (buddyFaceCompleted) buddyFaceCompleted.classList.toggle('hidden', mood !== 'completed');
+
+      if (!state.studyBuddyEnabled || !fsBuddyText || !fsBuddyTag) return;
+      if (mood === 'paused') {
+        setBuddyBubbleOpen(true);
+        fsBuddyText.classList.add('is-swapping');
+        setTimeout(() => {
+          fsBuddyTag.textContent = 'Paused';
+          fsBuddyText.textContent = 'Take a quick breath—ready when you are!';
+          fsBuddyText.classList.remove('is-swapping');
+        }, 160);
+      } else if (mood === 'completed') {
+        setBuddyBubbleOpen(true);
+        fsBuddyText.classList.add('is-swapping');
+        setTimeout(() => {
+          fsBuddyTag.textContent = 'Session Complete';
+          fsBuddyText.textContent = 'Session complete! Your streak is growing!';
+          fsBuddyText.classList.remove('is-swapping');
+        }, 160);
+      } else {
+        updateStudyBuddy(false);
+      }
+    }
+
+    function startStudyBuddyLoop() {
+      stopStudyBuddyLoop();
+      buddyMsgIndex = 0;
+      setBuddyMood(state.isPaused ? 'paused' : 'focus');
+      buddyIntervalId = setInterval(() => {
+        if (!state.isPaused && buddyMood === 'focus') updateStudyBuddy(true);
+      }, 180000);
+    }
+
+    function stopStudyBuddyLoop() {
+      if (buddyIntervalId) {
+        clearInterval(buddyIntervalId);
+        buddyIntervalId = null;
+      }
+      if (celebrationTimeoutId) {
+        clearTimeout(celebrationTimeoutId);
+        celebrationTimeoutId = null;
+      }
+    }
+
+    // Finger-Draggable (touchstart / touchmove / touchend) + Mouse support
+    let isDraggingBuddy = false;
+    let buddyHasDragged = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let dragOriginX = 0;
+    let dragOriginY = 0;
+    let suppressBuddyClick = false;
+
+    function beginBuddyDrag(clientX, clientY) {
+      isDraggingBuddy = true;
+      buddyHasDragged = false;
+      dragStartX = clientX;
+      dragStartY = clientY;
+      dragOriginX = buddyPos.x;
+      dragOriginY = buddyPos.y;
+      globalBuddy.classList.remove('is-snapping');
+      globalBuddy.classList.add('is-dragging');
+    }
+
+    function moveBuddyDrag(clientX, clientY) {
+      if (!isDraggingBuddy) return;
+      const dx = clientX - dragStartX;
+      const dy = clientY - dragStartY;
+      if (!buddyHasDragged && Math.hypot(dx, dy) > 6) {
+        buddyHasDragged = true;
+      }
+      if (!buddyHasDragged) return;
+      const maxX = Math.max(BUDDY_EDGE_MARGIN, window.innerWidth - BUDDY_SIZE - BUDDY_EDGE_MARGIN);
+      const maxY = Math.max(12, window.innerHeight - BUDDY_SIZE - 12);
+      const nx = Math.max(BUDDY_EDGE_MARGIN, Math.min(maxX, dragOriginX + dx));
+      const ny = Math.max(12, Math.min(maxY, dragOriginY + dy));
+      updateBubbleSide(nx + BUDDY_SIZE / 2 < window.innerWidth / 2 ? 'left' : 'right');
+      applyBuddyPosition(nx, ny, false);
+    }
+
+    function endBuddyDrag() {
+      if (!isDraggingBuddy) return;
+      isDraggingBuddy = false;
+      globalBuddy.classList.remove('is-dragging');
+      if (buddyHasDragged) {
+        suppressBuddyClick = true;
+        setTimeout(() => { suppressBuddyClick = false; }, 120);
+        snapBuddyToEdge(true);
+      } else {
+        handleBuddyTap();
+      }
+    }
+
+    function handleBuddyTap() {
+      if (!buddyBubbleOpen) {
+        if (buddyMood === 'focus') updateStudyBuddy(true);
+        setBuddyBubbleOpen(true);
+      } else {
+        setBuddyBubbleOpen(false);
+      }
+    }
+
+    if (buddyAvatarBtn) {
+      buddyAvatarBtn.addEventListener('touchstart', (e) => {
+        if (e.touches.length !== 1) return;
+        const t = e.touches[0];
+        beginBuddyDrag(t.clientX, t.clientY);
+      }, { passive: true });
+
+      buddyAvatarBtn.addEventListener('touchmove', (e) => {
+        if (!isDraggingBuddy || e.touches.length !== 1) return;
+        const t = e.touches[0];
+        moveBuddyDrag(t.clientX, t.clientY);
+        if (buddyHasDragged) e.preventDefault();
+      }, { passive: false });
+
+      buddyAvatarBtn.addEventListener('touchend', (e) => {
+        if (!isDraggingBuddy) return;
+        e.preventDefault();
+        endBuddyDrag();
+      }, { passive: false });
+
+      buddyAvatarBtn.addEventListener('touchcancel', () => {
+        if (!isDraggingBuddy) return;
+        isDraggingBuddy = false;
+        globalBuddy.classList.remove('is-dragging');
+        snapBuddyToEdge(true);
+      });
+
+      buddyAvatarBtn.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return;
+        beginBuddyDrag(e.clientX, e.clientY);
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDraggingBuddy) return;
+        moveBuddyDrag(e.clientX, e.clientY);
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (!isDraggingBuddy) return;
+        endBuddyDrag();
+      });
+
+      buddyAvatarBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleBuddyTap();
+        }
+      });
+    }
+
+    if (buddySpeechBubble) {
+      buddySpeechBubble.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (suppressBuddyClick) return;
+        if (buddyMood === 'focus') updateStudyBuddy(true);
+      });
+      buddySpeechBubble.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          if (buddyMood === 'focus') updateStudyBuddy(true);
+        }
+      });
+    }
+
+    window.addEventListener('resize', () => {
+      snapBuddyToEdge(false);
+    });
+
     function openFocusOverlay() {
+      isFocusOverlayOpen = true;
+      preFocusBuddyPos = { x: buddyPos.x, y: buddyPos.y, side: buddyPos.side };
       focusOverlay.setAttribute('aria-hidden', 'false');
+      if (state.studyBuddyEnabled) {
+        startStudyBuddyLoop();
+        // Smoothly dock Study Buddy to upper corner on Focus screen so it stays clear of the centered clock
+        const vw = window.innerWidth;
+        const dockSide = buddyPos.side || 'right';
+        const dockX = dockSide === 'left' ? BUDDY_EDGE_MARGIN : Math.max(BUDDY_EDGE_MARGIN, vw - BUDDY_SIZE - BUDDY_EDGE_MARGIN);
+        const dockY = Math.max(24, Math.min(48, Math.round(window.innerHeight * 0.06)));
+        updateBubbleSide(dockSide);
+        applyBuddyPosition(dockX, dockY, true);
+        setBuddyBubbleOpen(true);
+      }
+
       requestAnimationFrame(() => {
         focusOverlay.classList.add('is-open');
       });
@@ -1584,9 +2279,20 @@
     }
 
     function closeFocusOverlay() {
+      isFocusOverlayOpen = false;
+      stopStudyBuddyLoop();
+      setBuddyBubbleOpen(false);
+      setBuddyMood('focus');
       focusOverlay.classList.remove('is-open');
       focusOverlay.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
+      if (preFocusBuddyPos) {
+        buddyPos.x = preFocusBuddyPos.x;
+        buddyPos.y = preFocusBuddyPos.y;
+        buddyPos.side = preFocusBuddyPos.side;
+        preFocusBuddyPos = null;
+      }
+      snapBuddyToEdge(true);
       if (document.fullscreenElement && document.exitFullscreen) {
         document.exitFullscreen().catch(() => {});
       }
@@ -1744,20 +2450,32 @@
       }
     }
 
-    function finishCountupSession() {
+    function finishCountupSession(explicitEndMs) {
+      const elapsed = state.elapsedSeconds;
+      const sess = state.activeSession;
+      const wasPaused = state.isPaused;
+      const sessEnd = typeof explicitEndMs === 'number'
+        ? explicitEndMs
+        : (wasPaused && sess && sess.pausedAt ? sess.pausedAt : Date.now());
+
+      if (elapsed >= 600) {
+        creditLiveMinutes(sessEnd, true);
+      }
+
       stopTimer(false);
       closeFocusOverlay();
-      const studiedMins = Math.floor(state.elapsedSeconds / 60);
-      if (state.elapsedSeconds >= 600) {
+      const studiedMins = Math.floor(elapsed / 60);
+      if (elapsed >= 600) {
         state.completedSessions += 1;
-        logStudyMinutes(studiedMins);
+        saveState();
+        renderStats();
         timerStatus.textContent = `Saved ${studiedMins} min session!`;
         reminderBannerText.textContent = `Count Up complete! Saved ${studiedMins} minutes.`;
         sendNotification('Focus Session Saved!', `Great job! ${studiedMins} minutes logged.`, 'studyflow-complete', false);
         toastMsg.classList.remove('opacity-0');
         playChime();
       } else {
-        timerStatus.textContent = state.elapsedSeconds <= 15 ? 'Cancelled within 15s' : 'Under 10 min — session not counted';
+        timerStatus.textContent = elapsed <= 15 ? 'Cancelled within 15s' : 'Under 10 min — session not counted';
       }
       state.elapsedSeconds = 0;
       updateTimerUI();
@@ -1766,18 +2484,23 @@
     function toggleFocusPause() {
       if (!state.isRunning && !state.isPaused) return;
       if (state.isRunning) {
+        const pausedAt = Date.now();
+        creditLiveMinutes(pausedAt, false);
         stopTimer(true);
         state.isPaused = true;
         if (state.activeSession) {
           state.activeSession.isPaused = true;
+          state.activeSession.pausedAt = pausedAt;
           state.activeSession.pausedElapsed = state.elapsedSeconds;
           state.activeSession.pausedRemaining = state.remainingSeconds;
           saveState();
         }
         timerStatus.textContent = 'Paused';
+        setBuddyMood('paused');
         updateTimerUI();
       } else {
         state.isPaused = false;
+        const prevCredited = (state.activeSession && state.activeSession.creditedMinutes) || 0;
         const topic = studyTopicInput.value.trim();
         const startTime = Date.now() - state.elapsedSeconds * 1000;
         const endTime = Date.now() + state.remainingSeconds * 1000;
@@ -1787,19 +2510,21 @@
           startTime,
           endTime,
           topic,
-          isPaused: false
+          isPaused: false,
+          creditedMinutes: prevCredited,
+          lastCreditedTime: prevCredited > 0 ? (startTime + prevCredited * 60 * 1000) : null
         };
         saveState();
+        setBuddyMood('focus');
         startTimerInterval(startTime, endTime, topic);
       }
     }
 
     function openExitConfirmModal() {
       if (state.elapsedSeconds >= 600) {
-        const minsDone = Math.floor(state.elapsedSeconds / 60);
-        fsConfirmDesc.textContent = `You've focused for ${minsDone} min so far. Your completed minutes will be saved to your stats.`;
+        fsConfirmDesc.textContent = "You've already banked solid focus time—want to finish strong?";
       } else {
-        fsConfirmDesc.textContent = "You're doing great. Stopping before 10 minutes won't save this session to your stats.";
+        fsConfirmDesc.textContent = "Wait! Stopping now won't count this session toward your streak—just a little longer!";
       }
       fsConfirmModal.setAttribute('aria-hidden', 'false');
       requestAnimationFrame(() => {
@@ -1827,6 +2552,14 @@
         return;
       }
       const elapsed = state.elapsedSeconds;
+      const sess = state.activeSession;
+      const wasPaused = state.isPaused;
+      const sessEnd = (wasPaused && sess && sess.pausedAt) ? sess.pausedAt : Date.now();
+
+      if (state.timerMode === 'focus' && elapsed >= 600) {
+        creditLiveMinutes(sessEnd, true);
+      }
+
       stopTimer(false);
       closeFocusOverlay();
       if (state.timerMode === 'break') {
@@ -1838,7 +2571,8 @@
       } else if (elapsed >= 600) {
         const studiedMins = Math.floor(elapsed / 60);
         state.completedSessions += 1;
-        logStudyMinutes(studiedMins);
+        saveState();
+        renderStats();
         state.remainingSeconds = state.totalSeconds;
         timerStatus.textContent = `Saved ${studiedMins} min session!`;
       } else {
@@ -1877,7 +2611,9 @@
         startTime,
         endTime,
         topic,
-        isPaused: false
+        isPaused: false,
+        lastCreditedTime: null,
+        creditedMinutes: 0
       };
       saveState();
       openFocusOverlay();
@@ -1893,10 +2629,12 @@
       updateTimerUI();
 
       state.intervalId = setInterval(() => {
-        state.elapsedSeconds = Math.max(0, Math.round((Date.now() - startTime) / 1000));
+        const nowMs = Date.now();
+        state.elapsedSeconds = Math.max(0, Math.round((nowMs - startTime) / 1000));
 
         if (state.timerMode === 'countup') {
           state.elapsedSeconds = Math.min(180 * 60, state.elapsedSeconds);
+          creditLiveMinutes(nowMs, false);
           sendNotification(
             'Timer Mode Running',
             `${formatTime(state.elapsedSeconds)} elapsed${topic ? ' · ' + topic : ''}`,
@@ -1904,15 +2642,18 @@
             true
           );
           if (state.elapsedSeconds >= 180 * 60) {
-            finishCountupSession();
+            finishCountupSession(startTime + 180 * 60 * 1000);
             return;
           }
           updateTimerUI();
           return;
         }
 
-        state.remainingSeconds = Math.max(0, Math.round((endTime - Date.now()) / 1000));
+        state.remainingSeconds = Math.max(0, Math.round((endTime - nowMs) / 1000));
         if (state.remainingSeconds > 0) {
+          if (state.timerMode === 'focus') {
+            creditLiveMinutes(nowMs, false);
+          }
           sendNotification(
             state.timerMode === 'break' ? 'Break Timer Running' : 'Focus Timer Running',
             `${formatTime(state.remainingSeconds)} remaining${topic ? ' · ' + topic : ''}`,
@@ -1921,17 +2662,33 @@
           );
         }
         if (state.remainingSeconds <= 0) {
+          if (state.timerMode === 'focus' && state.totalSeconds >= 600) {
+            creditLiveMinutes(endTime, true);
+          }
           state.remainingSeconds = 0;
           state.elapsedSeconds = 0;
           stopTimer(false);
-          closeFocusOverlay();
           if (state.timerMode === 'focus') {
-            state.completedSessions += 1;
-            logStudyMinutes(Math.round(state.totalSeconds / 60));
-            timerStatus.textContent = 'Great job! Take a break.';
-            reminderBannerText.textContent = 'Focus session complete! Time for a well-earned break.';
-            sendNotification('Focus Session Complete!', 'Great job! Time for a break.', 'studyflow-complete', false);
+            if (state.totalSeconds >= 600) {
+              state.completedSessions += 1;
+              saveState();
+              renderStats();
+              setBuddyMood('completed');
+              timerStatus.textContent = 'Great job! Take a break.';
+              reminderBannerText.textContent = 'Focus session complete! Time for a well-earned break.';
+              sendNotification('Focus Session Complete!', 'Great job! Time for a break.', 'studyflow-complete', false);
+              celebrationTimeoutId = setTimeout(() => {
+                celebrationTimeoutId = null;
+                closeFocusOverlay();
+              }, 2400);
+            } else {
+              closeFocusOverlay();
+              timerStatus.textContent = 'Under 10 min — session not counted';
+              reminderBannerText.textContent = 'Focus session finished (under 10 min — not counted).';
+              sendNotification('Focus Session Finished', 'Session was under 10 minutes and was not counted.', 'studyflow-complete', false);
+            }
           } else {
+            closeFocusOverlay();
             timerStatus.textContent = 'Break finished! Ready to focus.';
             reminderBannerText.textContent = 'Break finished! Ready for your next focus session.';
             sendNotification('Break Finished!', 'Ready for your next focus session.', 'studyflow-complete', false);
@@ -1948,7 +2705,7 @@
               timerModePill.textContent = nextMode === 'break' ? 'Break' : 'Focus';
               setDuration(nextMins);
               toggleTimer();
-            }, 1500);
+            }, 2600);
           }
         }
         updateTimerUI();
@@ -2354,8 +3111,9 @@
       if (state.timerMode === 'countup') {
         state.elapsedSeconds = Math.min(180 * 60, Math.max(0, Math.floor((now - sess.startTime) / 1000)));
         if (state.elapsedSeconds >= 180 * 60) {
-          finishCountupSession();
+          finishCountupSession(sess.startTime + 180 * 60 * 1000);
         } else {
+          creditLiveMinutes(now, false);
           openFocusOverlay();
           startTimerInterval(sess.startTime, sess.endTime, sess.topic || '');
         }
@@ -2365,14 +3123,23 @@
       state.elapsedSeconds = Math.max(0, Math.floor((now - sess.startTime) / 1000));
       state.remainingSeconds = Math.max(0, Math.round((sess.endTime - now) / 1000));
       if (state.remainingSeconds <= 0) {
+        if (state.timerMode === 'focus' && state.totalSeconds >= 600) {
+          creditLiveMinutes(sess.endTime, true);
+        }
         stopTimer(false);
         closeFocusOverlay();
         if (state.timerMode === 'focus') {
-          state.completedSessions += 1;
-          logStudyMinutes(Math.round(state.totalSeconds / 60));
-          timerStatus.textContent = 'Completed while away! Great job.';
-          reminderBannerText.textContent = 'Focus session finished while away! Study time saved.';
-          sendNotification('Focus Session Complete!', 'Your study time has been saved.', 'studyflow-complete', false);
+          if (state.totalSeconds >= 600) {
+            state.completedSessions += 1;
+            saveState();
+            renderStats();
+            timerStatus.textContent = 'Completed while away! Great job.';
+            reminderBannerText.textContent = 'Focus session finished while away! Study time saved.';
+            sendNotification('Focus Session Complete!', 'Your study time has been saved.', 'studyflow-complete', false);
+          } else {
+            timerStatus.textContent = 'Under 10 min — session not counted';
+            reminderBannerText.textContent = 'Focus session finished while away (under 10 min — not counted).';
+          }
         } else {
           timerStatus.textContent = 'Break finished!';
         }
@@ -2382,6 +3149,9 @@
         state.elapsedSeconds = 0;
         updateTimerUI();
       } else {
+        if (state.timerMode === 'focus') {
+          creditLiveMinutes(now, false);
+        }
         openFocusOverlay();
         startTimerInterval(sess.startTime, sess.endTime, sess.topic || '');
       }
@@ -2408,6 +3178,8 @@
     renderReminders();
     updateProUI();
     updateStreakUI();
+    initBuddyPosition();
+    applyStudyBuddyVisibility(state.studyBuddyEnabled);
     resumeActiveSession();
   </script>
 </body>
