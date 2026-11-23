@@ -19,9 +19,29 @@
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
       background-color: #020617;
       color: #f1f5f9;
-      
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
     }
-    * { -webkit-tap-highlight-color: transparent; }
+    svg, svg circle, svg path, svg rect, svg ellipse {
+      shape-rendering: geometricPrecision;
+    }
+    * {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+    }
+    body {
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+    }
+    input, textarea, [contenteditable="true"] {
+      -webkit-user-select: text !important;
+      user-select: text !important;
+      -webkit-touch-callout: default !important;
+    }
     button, input, select { touch-action: manipulation; }
     .progress-ring__circle {
       transition: stroke-dashoffset 0.35s linear;
@@ -66,11 +86,11 @@
     }
     .tab-enter-right {
       will-change: transform, opacity;
-      animation: tabSlideInRight 250ms ease-out both;
+      animation: tabSlideInRight 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
     }
     .tab-enter-left {
       will-change: transform, opacity;
-      animation: tabSlideInLeft 250ms ease-out both;
+      animation: tabSlideInLeft 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
     }
     .fire-animate {
       display: inline-block;
@@ -123,7 +143,7 @@
 
     button, .nav-tab {
       will-change: transform, opacity;
-      transition: transform 250ms ease-out, opacity 250ms ease-out;
+      transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1), opacity 280ms cubic-bezier(0.22, 1, 0.36, 1);
     }
     button:active { transform: scale(0.96); }
     .nav-tab.is-active-tab { transform: translate3d(0, -2px, 0) scale(1.03); }
@@ -215,24 +235,24 @@
     #focus-fullscreen-overlay {
       background: radial-gradient(circle at 50% 42%, #0b1120 0%, #020617 72%, #000000 100%);
       opacity: 0;
-      transform: translate3d(0, 18px, 0) scale(0.96);
+      transform: translate3d(0, 22px, 0) scale(0.965);
       visibility: hidden;
       pointer-events: none;
       will-change: transform, opacity;
-      transition: opacity 250ms ease-out, transform 250ms ease-out, visibility 0s linear 250ms;
+      transition: opacity 280ms cubic-bezier(0.22, 1, 0.36, 1), transform 280ms cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 280ms;
     }
     #focus-fullscreen-overlay.is-open {
       opacity: 1;
       transform: translate3d(0, 0, 0) scale(1);
       visibility: visible;
       pointer-events: auto;
-      transition: opacity 250ms ease-out, transform 250ms ease-out, visibility 0s linear 0s;
+      transition: opacity 280ms cubic-bezier(0.22, 1, 0.36, 1), transform 280ms cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0s;
     }
     #focus-fullscreen-overlay .fs-clock-wrap {
       opacity: 0;
-      transform: translate3d(0, 12px, 0) scale(0.92);
+      transform: translate3d(0, 14px, 0) scale(0.93);
       will-change: transform, opacity;
-      transition: opacity 250ms ease-out, transform 250ms ease-out;
+      transition: opacity 280ms cubic-bezier(0.22, 1, 0.36, 1), transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
     }
     #focus-fullscreen-overlay.is-open .fs-clock-wrap {
       opacity: 1;
@@ -240,9 +260,9 @@
     }
     #focus-fullscreen-overlay .fs-controls-wrap {
       opacity: 0;
-      transform: translate3d(0, 16px, 0);
+      transform: translate3d(0, 18px, 0);
       will-change: transform, opacity;
-      transition: opacity 250ms ease-out 40ms, transform 250ms ease-out 40ms;
+      transition: opacity 280ms cubic-bezier(0.22, 1, 0.36, 1) 40ms, transform 280ms cubic-bezier(0.22, 1, 0.36, 1) 40ms;
     }
     #focus-fullscreen-overlay.is-open .fs-controls-wrap {
       opacity: 1;
@@ -254,19 +274,19 @@
       visibility: hidden;
       pointer-events: none;
       will-change: opacity;
-      transition: opacity 220ms ease-out, visibility 0s linear 220ms;
+      transition: opacity 280ms cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 280ms;
     }
     #fs-confirm-modal.is-open {
       opacity: 1;
       visibility: visible;
       pointer-events: auto;
-      transition: opacity 220ms ease-out, visibility 0s linear 0s;
+      transition: opacity 280ms cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0s;
     }
     #fs-confirm-modal .fs-confirm-card {
       opacity: 0;
-      transform: translate3d(0, 14px, 0) scale(0.95);
+      transform: translate3d(0, 16px, 0) scale(0.95);
       will-change: transform, opacity;
-      transition: opacity 220ms ease-out, transform 220ms ease-out;
+      transition: opacity 280ms cubic-bezier(0.22, 1, 0.36, 1), transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
     }
     #fs-confirm-modal.is-open .fs-confirm-card {
       opacity: 1;
@@ -461,7 +481,7 @@
 
       <section class="flex flex-col items-center justify-center py-2">
         <div class="clock-circle-lit relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
-          <svg class="w-full h-full" viewBox="0 0 220 220">
+          <svg class="w-full h-full" viewBox="0 0 220 220" shape-rendering="geometricPrecision">
             <circle class="text-slate-800/35" stroke="currentColor" stroke-width="12" fill="transparent" r="96" cx="110" cy="110" />
             <circle id="progress-circle" class="progress-ring__circle accent-text" stroke="currentColor" stroke-width="12" stroke-linecap="round" fill="transparent" r="96" cx="110" cy="110" />
           </svg>
@@ -598,7 +618,7 @@
           </div>
           <div>
             <label for="goal-target" class="muted-text block text-xs font-medium text-slate-400 mb-1">Target (min)</label>
-            <input id="goal-target" type="number" min="10" max="720" value="120" class="surface-sub w-full bg-slate-950/70 border border-slate-800 rounded-xl px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500" />
+            <input id="goal-target" type="number" min="10" max="1440" value="120" class="surface-sub w-full bg-slate-950/70 border border-slate-800 rounded-xl px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500" />
           </div>
         </div>
 
@@ -853,7 +873,7 @@
   <!-- Regain-Style Full-Screen Focus Page -->
   <div id="focus-fullscreen-overlay" aria-hidden="true" class="fixed inset-0 z-50 flex flex-col items-center justify-center gap-10 p-6 select-none">
     <div class="fs-clock-wrap clock-circle-lit relative w-72 h-72 sm:w-80 sm:h-80 flex items-center justify-center">
-      <svg class="w-full h-full relative z-10" viewBox="0 0 220 220">
+      <svg class="w-full h-full relative z-10" viewBox="0 0 220 220" shape-rendering="geometricPrecision">
         <circle class="text-slate-800/40" stroke="currentColor" stroke-width="10" fill="transparent" r="96" cx="110" cy="110" />
         <circle id="fs-progress-circle" class="progress-ring__circle accent-text ring-active" stroke="currentColor" stroke-width="10" stroke-linecap="round" fill="transparent" r="96" cx="110" cy="110" />
       </svg>
@@ -1026,14 +1046,17 @@
 
   <script>
     const STORAGE_KEY = 'studyflow_step6_v1';
-    const todayNow = new Date();
     const pad2 = (n) => String(n).padStart(2, '0');
-    const toDateKey = (d) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
-    const todayKey = toDateKey(todayNow);
+    function getLocalDateKey(date = new Date()) {
+      const d = date instanceof Date ? date : new Date(date);
+      return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+    }
+    const toLocalDateTimeInput = (d) => `${getLocalDateKey(d)}T${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
 
-    const sampleExam1 = new Date(todayNow.getTime() + 9 * 86400000);
+    const initNow = new Date();
+    const sampleExam1 = new Date(initNow.getTime() + 9 * 86400000);
     sampleExam1.setHours(9, 0, 0, 0);
-    const sampleExam2 = new Date(todayNow.getTime() + 22 * 86400000);
+    const sampleExam2 = new Date(initNow.getTime() + 22 * 86400000);
     sampleExam2.setHours(14, 0, 0, 0);
 
     const THEMES = {
@@ -1065,9 +1088,10 @@
       isRunning: false,
       isPaused: false,
       intervalId: null,
-      completedSessions: 0,
+      activeDateKey: getLocalDateKey(),
       studiedMinutesToday: 0,
       studyLog: {},
+      sessionLog: {},
       goalTitle: 'Finish today’s core revision',
       goalTargetMinutes: 120,
       todos: [
@@ -1075,12 +1099,12 @@
         { id: 2, text: 'Solve 10 practice problems', subject: 'Math', done: false }
       ],
       exams: [
-        { id: 101, name: 'Calculus Midterm', datetime: sampleExam1.toISOString().slice(0, 16) },
-        { id: 102, name: 'Biology Final', datetime: sampleExam2.toISOString().slice(0, 16) }
+        { id: 101, name: 'Calculus Midterm', datetime: toLocalDateTimeInput(sampleExam1) },
+        { id: 102, name: 'Biology Final', datetime: toLocalDateTimeInput(sampleExam2) }
       ],
-      calYear: todayNow.getFullYear(),
-      calMonth: todayNow.getMonth(),
-      selectedDate: todayKey,
+      calYear: initNow.getFullYear(),
+      calMonth: initNow.getMonth(),
+      selectedDate: getLocalDateKey(),
       calNotes: {},
       reminders: [
         { id: 201, title: 'Stretch & hydrate', time: '16:00', enabled: true, lastTriggeredDate: '' }
@@ -1098,12 +1122,26 @@
       activeSession: null
     };
 
+    function getTodaySessionCount(dateKey = getLocalDateKey()) {
+      return Math.max(0, Number(state.sessionLog[dateKey]) || 0);
+    }
+
+    function syncTodayFromLogs(dateKey = getLocalDateKey()) {
+      state.activeDateKey = dateKey;
+      state.studiedMinutesToday = Number(state.studyLog[dateKey]) || 0;
+    }
+
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
       if (saved) {
-        state.completedSessions = saved.completedSessions ?? 0;
+        const currentKey = getLocalDateKey();
         if (saved.studyLog && typeof saved.studyLog === 'object') state.studyLog = saved.studyLog;
-        state.studiedMinutesToday = state.studyLog[todayKey] ?? saved.studiedMinutesToday ?? 0;
+        if (saved.sessionLog && typeof saved.sessionLog === 'object') {
+          state.sessionLog = saved.sessionLog;
+        } else if (saved.lastSavedDateKey === currentKey && typeof saved.completedSessions === 'number') {
+          state.sessionLog[currentKey] = Math.max(0, Number(saved.completedSessions) || 0);
+        }
+        syncTodayFromLogs(currentKey);
         state.goalTitle = saved.goalTitle ?? state.goalTitle;
         state.goalTargetMinutes = saved.goalTargetMinutes ?? 120;
         if (Array.isArray(saved.todos)) state.todos = saved.todos;
@@ -1123,11 +1161,14 @@
     } catch (e) {}
 
     function saveState() {
+      const currentKey = getLocalDateKey();
+      syncTodayFromLogs(currentKey);
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
-          completedSessions: state.completedSessions,
+          lastSavedDateKey: currentKey,
           studiedMinutesToday: state.studiedMinutesToday,
           studyLog: state.studyLog,
+          sessionLog: state.sessionLog,
           goalTitle: state.goalTitle,
           goalTargetMinutes: state.goalTargetMinutes,
           todos: state.todos,
@@ -1147,6 +1188,15 @@
       } catch (e) {}
     }
 
+    function recordCompletedSession(atTimeMs) {
+      const key = typeof atTimeMs === 'number' ? getLocalDateKey(new Date(atTimeMs)) : getLocalDateKey();
+      state.sessionLog[key] = getTodaySessionCount(key) + 1;
+      syncTodayFromLogs(getLocalDateKey());
+      saveState();
+      updateTimerUI();
+      renderStats();
+    }
+
     function logStudyMinutes(mins, startTimeMs, endTimeMs) {
       const totalMins = Math.max(0, Math.round(Number(mins) || 0));
       if (totalMins <= 0) return;
@@ -1158,7 +1208,7 @@
           const d = new Date(cursor);
           const nextMidnight = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1, 0, 0, 0, 0).getTime();
           const segmentEnd = Math.min(endTimeMs, nextMidnight);
-          buckets.push({ key: toDateKey(d), ms: segmentEnd - cursor });
+          buckets.push({ key: getLocalDateKey(d), ms: segmentEnd - cursor });
           cursor = segmentEnd;
         }
 
@@ -1186,13 +1236,13 @@
           });
         }
       } else {
-        const key = toDateKey(new Date());
+        const key = getLocalDateKey(new Date());
         state.studyLog[key] = (state.studyLog[key] || 0) + totalMins;
       }
 
-      const currentTodayKey = toDateKey(new Date());
-      state.studiedMinutesToday = state.studyLog[currentTodayKey] || 0;
+      syncTodayFromLogs(getLocalDateKey());
       saveState();
+      updateTimerUI();
       updateGoalUI();
       updateStreakUI();
       renderStats();
@@ -1388,7 +1438,7 @@
       const now = new Date();
       for (let i = 0; i < 365; i++) {
         const d = new Date(now.getTime() - i * 86400000);
-        const mins = state.studyLog[toDateKey(d)] || 0;
+        const mins = state.studyLog[getLocalDateKey(d)] || 0;
         if (mins > 0) {
           streak += 1;
         } else if (i === 0) {
@@ -1602,8 +1652,12 @@
       let totalMins = 0;
       let avgMins = 0;
 
+      let periodSessions = 0;
+
       if (period === 'daily') {
-        const minsToday = state.studyLog[toDateKey(now)] || state.studiedMinutesToday || 0;
+        const todayStr = getLocalDateKey(now);
+        const minsToday = Number(state.studyLog[todayStr]) || 0;
+        periodSessions = Number(state.sessionLog[todayStr]) || 0;
         const target = Math.max(10, Number(state.goalTargetMinutes) || 120);
         statsPeriodLabel.textContent = 'Today';
         statsChartTitle.textContent = "Today's Progress vs Goal";
@@ -1619,8 +1673,9 @@
         statsChartTitle.textContent = 'Weekly Study Hours';
         for (let i = 6; i >= 0; i--) {
           const d = new Date(now.getTime() - i * 86400000);
-          const key = toDateKey(d);
-          const m = state.studyLog[key] || 0;
+          const key = getLocalDateKey(d);
+          const m = Number(state.studyLog[key]) || 0;
+          periodSessions += Number(state.sessionLog[key]) || 0;
           totalMins += m;
           items.push({ label: d.toLocaleDateString([], { weekday: 'short' }), mins: m });
         }
@@ -1632,7 +1687,9 @@
           let weekSum = 0;
           for (let dOffset = 0; dOffset < 7; dOffset++) {
             const d = new Date(now.getTime() - (w * 7 + dOffset) * 86400000);
-            weekSum += state.studyLog[toDateKey(d)] || 0;
+            const k = getLocalDateKey(d);
+            weekSum += Number(state.studyLog[k]) || 0;
+            periodSessions += Number(state.sessionLog[k]) || 0;
           }
           totalMins += weekSum;
           items.push({ label: w === 0 ? 'This Wk' : `Wk ${4 - w}`, mins: weekSum });
@@ -1650,6 +1707,9 @@
             if (mIdx >= 0 && mIdx < 12) monthTotals[mIdx] += Number(v) || 0;
           }
         });
+        Object.entries(state.sessionLog).forEach(([k, v]) => {
+          if (k.startsWith(`${year}-`)) periodSessions += Number(v) || 0;
+        });
         monthTotals.forEach((mSum, idx) => {
           totalMins += mSum;
           items.push({ label: months[idx], mins: mSum });
@@ -1657,11 +1717,13 @@
         avgMins = Math.round(totalMins / 365);
       }
 
-      const maxMins = Math.max(1, ...items.map((x) => x.mins));
+      const dailyGoalMins = Math.max(10, Number(state.goalTargetMinutes) || 120);
+      const highestLoggedMinsInView = Math.max(0, ...items.filter((x) => !x.muted).map((x) => x.mins));
+      const chartScaleMins = Math.max(dailyGoalMins, highestLoggedMinsInView, 12 * 60);
       statsTotalTime.textContent = formatHoursMinutes(totalMins);
       statsAvgTime.textContent = formatHoursMinutes(avgMins);
-      statsTotalSessions.textContent = state.completedSessions;
-      statsChartPeak.textContent = `Peak: ${formatHoursMinutes(Math.max(0, ...items.map((x) => x.mins)))}`;
+      statsTotalSessions.textContent = periodSessions;
+      statsChartPeak.textContent = `Peak: ${formatHoursMinutes(highestLoggedMinsInView)}`;
 
       const isDense = items.length > 7;
       statsBars.className = isDense
@@ -1686,7 +1748,7 @@
           : 'w-full max-w-[40px] flex-1 flex items-end justify-center bg-slate-800/30 rounded-xl overflow-hidden';
 
         const bar = document.createElement('div');
-        const pct = item.mins > 0 ? Math.max(8, Math.round((item.mins / maxMins) * 100)) : 4;
+        const pct = item.mins > 0 ? Math.min(100, Math.max(6, Math.round((item.mins / chartScaleMins) * 100))) : 4;
         bar.className = item.muted
           ? 'w-full rounded-t-lg bg-slate-700/60 transition-all duration-500 ease-out'
           : 'w-full rounded-t-lg accent-bg transition-all duration-500 ease-out';
@@ -1893,16 +1955,20 @@
     }
 
     function updateGoalUI() {
+      const todayStr = getLocalDateKey();
+      const minsToday = Number(state.studyLog[todayStr]) || 0;
+      state.studiedMinutesToday = minsToday;
       const target = Math.max(10, Number(state.goalTargetMinutes) || 120);
-      const pct = Math.min(100, Math.round((state.studiedMinutesToday / target) * 100));
-      const hm = formatHoursMinutes(state.studiedMinutesToday);
+      const rawPct = Math.round((minsToday / target) * 100);
+      const barWidthPct = Math.min(100, Math.max(0, rawPct));
+      const hm = formatHoursMinutes(minsToday);
       topDailyHours.textContent = hm;
       timerDailyHours.textContent = hm;
       goalHoursText.textContent = hm;
-      timerGoalPct.textContent = `${pct}%`;
-      goalBadge.textContent = `${state.studiedMinutesToday} / ${target} min`;
-      goalBar.style.width = `${pct}%`;
-      goalPercent.textContent = pct >= 100 ? 'Goal reached!' : `${pct}% complete`;
+      timerGoalPct.textContent = `${rawPct}%`;
+      goalBadge.textContent = `${minsToday} / ${target} min`;
+      goalBar.style.width = `${barWidthPct}%`;
+      goalPercent.textContent = rawPct >= 100 ? `Goal reached! (${rawPct}%)` : `${rawPct}% complete`;
     }
 
     let buddyIntervalId = null;
@@ -1918,7 +1984,7 @@
       const exams = (stored && Array.isArray(stored.exams)) ? stored.exams : state.exams;
       const goalTarget = (stored && stored.goalTargetMinutes) || state.goalTargetMinutes || 120;
       const studyLog = (stored && stored.studyLog) || state.studyLog || {};
-      const minsToday = studyLog[toDateKey(new Date())] || state.studiedMinutesToday || 0;
+      const minsToday = Number(studyLog[getLocalDateKey()]) || 0;
       const topic = studyTopicInput.value.trim();
 
       if (state.timerMode === 'break') {
@@ -2327,7 +2393,8 @@
       progressCircle.style.strokeDashoffset = offset;
       fsProgressCircle.style.strokeDashoffset = offset;
 
-      sessionCountEl.textContent = state.completedSessions;
+      const todaySessions = getTodaySessionCount(getLocalDateKey());
+      sessionCountEl.textContent = todaySessions;
       progressCircle.classList.toggle('ring-active', state.isRunning);
       fsProgressCircle.classList.toggle('ring-active', state.isRunning);
 
@@ -2481,9 +2548,7 @@
       closeFocusOverlay();
       const studiedMins = Math.floor(elapsed / 60);
       if (elapsed >= 600) {
-        state.completedSessions += 1;
-        saveState();
-        renderStats();
+        recordCompletedSession(sessEnd);
         timerStatus.textContent = `Saved ${studiedMins} min session!`;
         reminderBannerText.textContent = `Count Up complete! Saved ${studiedMins} minutes.`;
         sendNotification('Focus Session Saved!', `Great job! ${studiedMins} minutes logged.`, 'studyflow-complete', false);
@@ -2585,9 +2650,7 @@
         timerStatus.textContent = 'Cancelled within 15s';
       } else if (elapsed >= 600) {
         const studiedMins = Math.floor(elapsed / 60);
-        state.completedSessions += 1;
-        saveState();
-        renderStats();
+        recordCompletedSession(sessEnd);
         state.remainingSeconds = state.totalSeconds;
         timerStatus.textContent = `Saved ${studiedMins} min session!`;
       } else {
@@ -2685,9 +2748,7 @@
           stopTimer(false);
           if (state.timerMode === 'focus') {
             if (state.totalSeconds >= 600) {
-              state.completedSessions += 1;
-              saveState();
-              renderStats();
+              recordCompletedSession(endTime);
               setBuddyMood('completed');
               timerStatus.textContent = 'Great job! Take a break.';
               reminderBannerText.textContent = 'Focus session complete! Time for a well-earned break.';
@@ -2853,7 +2914,7 @@
       const firstDay = new Date(state.calYear, state.calMonth, 1);
       const daysInMonth = new Date(state.calYear, state.calMonth + 1, 0).getDate();
       const startOffset = firstDay.getDay();
-      const currentTodayKey = toDateKey(new Date());
+      const currentTodayKey = getLocalDateKey(new Date());
 
       calMonthLabel.textContent = firstDay.toLocaleDateString([], { month: 'long', year: 'numeric' });
       calGrid.innerHTML = '';
@@ -2966,7 +3027,7 @@
     function checkReminders() {
       const now = new Date();
       const currentHHMM = `${pad2(now.getHours())}:${pad2(now.getMinutes())}`;
-      const key = toDateKey(now);
+      const key = getLocalDateKey(now);
       state.reminders.forEach((rem) => {
         if (rem.enabled && rem.time === currentHHMM && rem.lastTriggeredDate !== key) {
           rem.lastTriggeredDate = key;
@@ -3005,10 +3066,11 @@
 
     goalTitleInput.addEventListener('input', (e) => { state.goalTitle = e.target.value; saveState(); });
     goalTargetInput.addEventListener('change', (e) => {
-      state.goalTargetMinutes = Math.max(10, Math.min(720, Number(e.target.value) || 120));
+      state.goalTargetMinutes = Math.max(10, Math.min(1440, Number(e.target.value) || 120));
       goalTargetInput.value = state.goalTargetMinutes;
       saveState();
       updateGoalUI();
+      renderStats();
     });
 
     addManualMinBtn.addEventListener('click', () => logStudyMinutes(15));
@@ -3053,7 +3115,7 @@
       const now = new Date();
       state.calYear = now.getFullYear();
       state.calMonth = now.getMonth();
-      state.selectedDate = toDateKey(now);
+      state.selectedDate = getLocalDateKey(now);
       renderCalendar();
     });
 
@@ -3145,9 +3207,7 @@
         closeFocusOverlay();
         if (state.timerMode === 'focus') {
           if (state.totalSeconds >= 600) {
-            state.completedSessions += 1;
-            saveState();
-            renderStats();
+            recordCompletedSession(sess.endTime);
             timerStatus.textContent = 'Completed while away! Great job.';
             reminderBannerText.textContent = 'Focus session finished while away! Study time saved.';
             sendNotification('Focus Session Complete!', 'Your study time has been saved.', 'studyflow-complete', false);
@@ -3172,11 +3232,62 @@
       }
     }
 
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden && state.activeSession) {
+    function renderDailyCountersUI() {
+      syncTodayFromLogs(getLocalDateKey());
+      updateTimerUI();
+      updateGoalUI();
+      updateStreakUI();
+      renderStats();
+      if (state.studyBuddyEnabled && buddyMood === 'focus') {
+        updateStudyBuddy(false);
+      }
+    }
+
+    function checkDayRollover(forceRender) {
+      const currentKey = getLocalDateKey();
+      const rolledOver = state.activeDateKey !== currentKey;
+      if (rolledOver) {
+        const prevKey = state.activeDateKey;
+        if (state.selectedDate === prevKey) {
+          state.selectedDate = currentKey;
+          const now = new Date();
+          state.calYear = now.getFullYear();
+          state.calMonth = now.getMonth();
+        }
+        syncTodayFromLogs(currentKey);
+        saveState();
+        renderDailyCountersUI();
+        renderCalendar();
+      } else if (forceRender) {
+        renderDailyCountersUI();
+      }
+      return rolledOver;
+    }
+
+    function handleAppWakeOrFocus() {
+      checkDayRollover(true);
+      if (state.activeSession) {
         resumeActiveSession();
       }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      checkDayRollover(true);
     });
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        handleAppWakeOrFocus();
+      }
+    });
+
+    window.addEventListener('focus', () => {
+      handleAppWakeOrFocus();
+    });
+
+    setInterval(() => {
+      checkDayRollover(false);
+    }, 30000);
 
     // Initial render
     updateNotifUI();
@@ -3184,15 +3295,12 @@
     applyBackground(state.bgStyle);
     applyTheme(state.theme);
     applyClockFont(state.clockFont);
-    updateTimerUI();
-    updateGoalUI();
-    renderStats();
+    checkDayRollover(true);
     renderTodos();
     renderExams();
     renderCalendar();
     renderReminders();
     updateProUI();
-    updateStreakUI();
     initBuddyPosition();
     applyStudyBuddyVisibility(state.studyBuddyEnabled);
     resumeActiveSession();
