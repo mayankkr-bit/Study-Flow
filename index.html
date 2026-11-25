@@ -15,6 +15,11 @@
       --accent-hover: #dc2626;
       --accent-soft: rgba(239, 68, 68, 0.18);
     }
+    html, body, #todo-list, #reminder-list, .overflow-y-auto {
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
+      touch-action: pan-y;
+    }
     body {
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
       background-color: #020617;
@@ -57,6 +62,9 @@
     .surface-card {
       transform: translateZ(0);
     }
+    .gpu-transition {
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
     .ring-active {
       filter: drop-shadow(0 0 10px var(--accent-soft));
     }
@@ -98,28 +106,41 @@
       transform-origin: bottom center;
     }
 
-    /* Apple-style Liquid Glass UI (60fps GPU-optimized for mobile) */
+    /* Android WebView 60fps GPU-Optimized Translucent Surfaces */
+    .surface-card, #stats-chart-card, #todo-card, #todo-list, #reminder-list {
+      contain: layout style paint;
+    }
     .surface-card {
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.64), rgba(15, 23, 42, 0.42)) !important;
-      border: 1px solid rgba(255, 255, 255, 0.16) !important;
-      backdrop-filter: blur(12px) saturate(150%) !important;
-      -webkit-backdrop-filter: blur(12px) saturate(150%) !important;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.84), rgba(15, 23, 42, 0.74)) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
     }
     .surface-sub {
       background: rgba(255, 255, 255, 0.07) !important;
       border-color: rgba(255, 255, 255, 0.14) !important;
+    }
+    #top-header, #bottom-dock-bar {
+      backdrop-filter: blur(8px) !important;
+      -webkit-backdrop-filter: blur(8px) !important;
+    }
+    #top-header, #bottom-dock {
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    #bottom-dock {
+      transform: translate3d(-50%, 0, 0);
+      -webkit-transform: translate3d(-50%, 0, 0);
     }
     body.theme-light {
       background-color: #e0f2fe;
       color: #0f172a;
     }
     body.theme-light .surface-card {
-      background: rgba(255, 255, 255, 0.78) !important;
-      border: 1px solid rgba(255, 255, 255, 0.82) !important;
+      background: rgba(255, 255, 255, 0.88) !important;
+      border: 1px solid rgba(255, 255, 255, 0.86) !important;
       color: #0f172a;
-      backdrop-filter: blur(12px) saturate(150%) !important;
-      -webkit-backdrop-filter: blur(12px) saturate(150%) !important;
       box-shadow: 0 10px 26px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.92) !important;
     }
     body.theme-light .surface-sub {
@@ -159,6 +180,10 @@
       background-position: center;
       background-repeat: no-repeat;
       pointer-events: none;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
     #app-bg-layer.bg-crimson {
       background-image: radial-gradient(circle at 18% 18%, rgba(239, 68, 68, 0.42), transparent 46%),
@@ -301,6 +326,10 @@
       z-index: 55;
       touch-action: none;
       will-change: transform;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
       user-select: none;
       -webkit-user-select: none;
     }
@@ -333,10 +362,8 @@
       position: absolute;
       top: 50%;
       width: min(232px, calc(100vw - 92px));
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.88), rgba(45, 10, 22, 0.84));
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.94), rgba(45, 10, 22, 0.92));
       border: 1px solid rgba(255, 255, 255, 0.18);
-      backdrop-filter: blur(14px) saturate(150%);
-      -webkit-backdrop-filter: blur(14px) saturate(150%);
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.2);
       opacity: 0;
       visibility: hidden;
@@ -430,7 +457,7 @@
     </div>
 
     <!-- Compact Top Header -->
-    <header class="surface-card flex items-center justify-between gap-3 bg-slate-900/90 border border-slate-800 rounded-2xl px-4 py-3 shadow-lg backdrop-blur-md">
+    <header id="top-header" class="surface-card flex items-center justify-between gap-3 bg-slate-900/90 border border-slate-800 rounded-2xl px-4 py-3 shadow-lg">
       <div class="flex items-center gap-2.5">
         <img
           src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCABgAGADASIAAhEBAxEB/8QAHAAAAgMBAQEBAAAAAAAAAAAABAUBAwYCAAcI/8QAOBAAAgEDAQQHAwwDAQAAAAAAAQIDAAQRBQYSITETIkFRYXGRgbHRFSMkMjNSU2JyoaLwBxRC4f/EABoBAAIDAQEAAAAAAAAAAAAAAAIDAAEGBAX/xAApEQACAQMDAgUFAQAAAAAAAAABAgADBBEFElEhMSJBYXGBFJGhsfHh/9oADAMBAAIRAxEAPwD8uVNeAroLmpJIAqQDV0cJcjA50dHpkxAPRsB48PfQlo1aLHrFm6andNOBpU33P5D41I0mbsT+Q+NVuh/TnmJt01G6adfJM33P5D41ydKm+5/IfGpul/TnmJitQRTWTTJwD82T344+6gZYWUnI9asNFtRZesHqK6IqDRRMkCiII95gKpWjrQYBbuFC0bSXLQgP0I3YjukfWcc/IVCjJ5ZPj7zVMZJI8P2rcaLp9rolmL/VApuMB0jcb3Rg8QSO1zzAPADBPHlTMEE6ba2e7fgDueIJoWx2o6nuN0YgjcZVpQcuO8KOJHoPGtZF/jvS4FHyprlpbN2iWaOM+mSazerarruo2TzwNJZaex+qjYkcfeZuZ91Zu2tIulDTZbjlieZpY3N1JnoVVoWjLTFPOfM9Pn2n0eb/AB5pU4PyZrtpct2COWOT9gQayeubHahpokcRrPEnFmjByo7yp4+3l40wW22au8BEa2f/AJYMVI9cii3n1bQkWRLh9S05eIDN85EO8NzHrjyoA5B6T16ujI1MvgEcoc49xPnpXdPLB514v0o3ZTvE8mPPPwrZ61YWuuWjX+lgC5wXdFG6JQOfDscdoHAjiOPPDPkE5znvpysHEzFzbPaPyD2PMFnj3WIqk0ddjOG7xmgmolM56q4aSnZTC2+yc/lNL1NMLb7CT9JqnjLbufmOdj7SOe+e5uEDwWidMyNyc5AVT5sR7M08tY21zWpHumL2lqSzEn67nmT7c+lK9EcW+zE8o5zXaJnwVC2PVh6UysG/1NjJ5V+vMxBPmcfGkOcsZqtFoIFG8eEAufXHYfqB69rDXlwY4SVt1OFUcN7xNd7GhJtrtCilRZI5NQt0dGGQwMqggjtGKVbParBpetQXt5ptpqlvGTv2d1no5QQRxI4gjOQewgc6+l6BoGzesa3puvbF6mlpFY3UN5f6NqkwSa1iSRWkkjkPVljUAn7wA9ldCqFGBMxf3tS9rGtUPU/iYrbIJBthr0MKLHFHqNyiIowFAlYAADkOzFH2ly+gPDa30xNw5JntN3P+spHAMfvnmU7BjPHgLdsbu30TavWrq0miudVurya5gljIeO0ikdnR1PJpWVgwPJAQeLfVwvTHf3iSSTkknJJ7zUZQwwYVhf1rKsKtI/7NfeIdD1qOS1YrZ3RDJu8kcciP29aR7YWaQX6XNuoSC7TplUckOSGUeTA+zFOtRY3exkMrcZIWGD5HHwoDXWFzsvbyHi0V26DyZA3vU1zocETTazQRlbYPCQHHpnuJm7n7JD+UUvbto+4+xT9IoBudPSZO47ieXmKPtz8xJ+k0uHOj4D9Hl/Sajy7bufaaTQWWbZm5jPHorpHPkyEZ9VFMrFTd7H3VuvGWBiSPLj8azeyV5HHeyWlw4SC8ToWc8kOQVY+TAezNO9LvH0fVpVuVKxs3RTqf+WHb/fGkOCCZqtGuKZVRUPhYFD6Z8/1MgzFXINPNktfj0HVYrySwhvCHQMJcHEWfnVVT1cumUyQcAnHE5BW1Gzrxs15YDpLV+t1eO7/541k2DqcMDT1cMJm9Q0+tY1TTqD55ms232wuNqr2GSa2tLe3td+K0SGBI3SAtmON2UANuLhRw5DxrNKxZwBVCh2OADWs2X2deRheagOjtU63W4b//AJ41GcKMyafp9a+qinTHzxGOoKbTY62t24SzsDjz4/Cl2ussOy9tGOHS3TuB4KgGfVjRGqXb6zq8S2qlo1booFH/AEx4Z/vhSXa68jkvY7S3cPBZp0CuvJzklmHmxPsxSEGSJpNZuKYVhTOVACD1x3MXTn6PGfyigG5mjZj9Hi/SKBbmaekylz3EgGjIDmKRRzKmgqvt5N1s1bDpAottbrK0bBBFa7T7yLW4I4Z5Ei1SNRHG8hwlyg5Ix7GHIE8xgHBANZWeLBLoMoe7sqlWwcg0LKHEfQrvatgjIM3mn6jfaRO1sUbqnDW0/VZT+Unn/eFGzahoVwc3+ntDKeeYyvuxWUstpJ1gS31CKG/tkG6qTglkHcrjDDyzjwpjDrOjkdUaraflinWRf3ApBQg9RNNbayNgTcGXhxnHt/Y6h1DQ7Zs6fp7TS9mIy3vzQWoahfavOttuN1jhbWDrMx8SOX94UFPrOjheI1W7/LLOqKfPANLrzaSd4Ht7CKKwtnGGSAEM47mc5Y+WceFQKT5S7jWRsKbgq8IMZ9/7GV/eRaHbyQwSJLqkimOR4zlLZDzRD2seRI5cQMkk1kXYkk1yzE8SathiJIZxhB39tPVQgmYuLhrpgAMAS6Y4iRTzCihGq2d95jxqk0SjERWbc3SQKkHFcipooqERTlauEsZPWjQ+ygQa6BoSojlrsoxDw8H4KelSHg/CT0pfvHvqd41WyNF0eB9ofvwfhJ6VBeD8FPSgd499eLE9tTZIbo8D7Qsyxj6saA+AqiWYtVWajNWFxFNWZuk8TmoJqM16iiZ//9k="
@@ -457,7 +484,7 @@
     </header>
 
     <!-- TAB 1: DEDICATED POMODORO CLOCK -->
-    <main id="view-timer" class="surface-card bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-6 sm:p-8 space-y-6 backdrop-blur-md">
+    <main id="view-timer" class="surface-card bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-6 sm:p-8 space-y-6">
       <div class="grid grid-cols-3 gap-3 text-center">
         <div class="surface-sub bg-slate-950/60 border border-slate-800 rounded-2xl py-2.5 px-2">
           <p class="muted-text text-[11px] text-slate-400">Daily Study</p>
@@ -548,7 +575,7 @@
 
     <!-- TAB 2: STUDY HOURS INSIGHTS (DAILY / WEEKLY / MONTHLY LIKE REGAIN) -->
     <section id="view-stats" class="hidden space-y-5">
-      <section class="surface-card bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-6 space-y-5 backdrop-blur-md">
+      <section class="surface-card bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-6 space-y-5">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 class="text-xl font-bold tracking-tight">Study Hours</h2>
@@ -579,7 +606,7 @@
         </div>
 
         <!-- Visual Bar Chart -->
-        <div class="surface-sub bg-slate-950/60 border border-slate-800 rounded-2xl p-4 space-y-3">
+        <div id="stats-chart-card" class="surface-sub bg-slate-950/60 border border-slate-800 rounded-2xl p-4 space-y-3">
           <div class="flex items-center justify-between text-xs">
             <span id="stats-chart-title" class="font-semibold">Today's Focus Breakdown</span>
             <span id="stats-chart-peak" class="muted-text text-slate-400">Peak: 0m</span>
@@ -602,7 +629,7 @@
 
     <!-- TAB 3: TASKS & DAILY GOALS -->
     <section id="view-tasks" class="hidden space-y-5">
-      <section class="surface-card bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-6 space-y-4 backdrop-blur-md">
+      <section class="surface-card bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-6 space-y-4">
         <div class="flex items-center justify-between">
           <div>
             <h2 class="text-lg font-bold tracking-tight">Daily Study Goal</h2>
@@ -624,7 +651,7 @@
 
         <div class="space-y-1.5">
           <div class="surface-sub w-full h-3 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
-            <div id="goal-bar" class="h-full bg-gradient-to-r from-sky-400 to-emerald-400 transition-all duration-300" style="width: 0%"></div>
+            <div id="goal-bar" class="h-full bg-gradient-to-r from-sky-400 to-emerald-400 gpu-transition" style="width: 0%"></div>
           </div>
           <div class="muted-text flex items-center justify-between text-xs text-slate-400">
             <span id="goal-percent">0% complete</span>
@@ -633,7 +660,7 @@
         </div>
       </section>
 
-      <section class="surface-card bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-6 space-y-4 backdrop-blur-md">
+      <section id="todo-card" class="surface-card bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-6 space-y-4">
         <div class="flex items-center justify-between">
           <div>
             <h2 class="text-lg font-bold tracking-tight">Study To-Do List</h2>
@@ -654,7 +681,7 @@
 
     <!-- TAB 4: CALENDAR & EXAM COUNTDOWN -->
     <section id="view-calendar" class="hidden space-y-5">
-      <section class="surface-card bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-6 space-y-4 backdrop-blur-md">
+      <section class="surface-card bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-6 space-y-4">
         <div class="flex items-center justify-between">
           <div>
             <h2 id="cal-month-label" class="text-xl font-bold tracking-tight">November 2026</h2>
@@ -686,7 +713,7 @@
         </div>
       </section>
 
-      <section class="surface-card bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-6 space-y-5 backdrop-blur-md">
+      <section class="surface-card bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-6 space-y-5">
         <div>
           <h2 class="text-xl font-bold tracking-tight">Exam Countdown</h2>
           <p class="muted-text text-xs text-slate-400">Live countdown to your upcoming exams</p>
@@ -705,7 +732,7 @@
     <!-- TAB 5: MORE (REMINDERS, THEMES, WALLPAPERS, SOUNDS, PRIVACY & PRO) -->
     <section id="view-more" class="hidden space-y-5">
       <!-- Reminders -->
-      <section class="surface-card bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-6 space-y-4 backdrop-blur-md">
+      <section class="surface-card bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-6 space-y-4">
         <div class="flex items-center justify-between gap-2">
           <div>
             <h2 class="text-lg font-bold tracking-tight">Study Reminders</h2>
@@ -727,7 +754,7 @@
       </section>
 
       <!-- Themes & Wallpapers -->
-      <section class="surface-card bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-6 space-y-5 backdrop-blur-md">
+      <section class="surface-card bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-6 space-y-5">
         <div>
           <h2 class="text-lg font-bold tracking-tight">Themes &amp; Wallpapers</h2>
           <p class="muted-text text-xs text-slate-400">Customize Light/Dark mode, wallpapers, colors, fonts &amp; sounds</p>
@@ -817,7 +844,7 @@
       </section>
 
       <!-- Support, Privacy & Contact -->
-      <section class="surface-card bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-6 space-y-4 backdrop-blur-md">
+      <section class="surface-card bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl p-6 space-y-4">
         <div class="flex items-center justify-between">
           <div>
             <h2 class="text-lg font-bold tracking-tight">Support, Privacy &amp; Contact</h2>
@@ -849,7 +876,7 @@
 
 
   <!-- Rewarded Ad Preview / Bridge Modal -->
-  <div id="reward-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm items-center justify-center p-4">
+  <div id="reward-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 items-center justify-center p-4">
     <div class="surface-card bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4 text-center shadow-2xl">
       <span class="inline-block text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-400">
         Rewarded Unlock
@@ -982,7 +1009,7 @@
   </div>
 
   <!-- Liquid Glass Exit Confirmation Popup -->
-  <div id="fs-confirm-modal" aria-hidden="true" class="fixed inset-0 z-[60] bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-5">
+  <div id="fs-confirm-modal" aria-hidden="true" class="fixed inset-0 z-[60] bg-slate-950/70 flex items-center justify-center p-5">
     <div class="fs-confirm-card surface-card rounded-3xl max-w-sm w-full p-6 space-y-4 text-center">
       <div class="buddy-float w-16 h-16 mx-auto">
         <svg viewBox="0 0 64 64" class="w-full h-full drop-shadow-[0_6px_16px_rgba(239,68,68,0.4)]" aria-hidden="true">
@@ -1019,8 +1046,8 @@
   </div>
 
   <!-- BOTTOM NAVIGATION DOCK (Well-spaced tabs at the bottom!) -->
-  <nav aria-label="Primary navigation" class="fixed bottom-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-2xl z-40">
-    <div class="surface-card bg-slate-900/95 border border-slate-800 rounded-2xl shadow-2xl px-3 py-2 flex items-center justify-around gap-2 backdrop-blur-lg">
+  <nav id="bottom-dock" aria-label="Primary navigation" class="fixed bottom-3 left-1/2 w-[calc(100%-1.5rem)] max-w-2xl z-40">
+    <div id="bottom-dock-bar" class="surface-card bg-slate-900/95 border border-slate-800 rounded-2xl shadow-2xl px-3 py-2 flex items-center justify-around gap-2">
       <button id="tab-timer-btn" type="button" class="nav-tab accent-bg text-white flex-1 py-2 px-2 rounded-xl flex flex-col items-center gap-1 text-[11px] font-semibold transition">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 3h6"/></svg>
         <span>Timer</span>
@@ -1750,8 +1777,8 @@
         const bar = document.createElement('div');
         const pct = item.mins > 0 ? Math.min(100, Math.max(6, Math.round((item.mins / chartScaleMins) * 100))) : 4;
         bar.className = item.muted
-          ? 'w-full rounded-t-lg bg-slate-700/60 transition-all duration-500 ease-out'
-          : 'w-full rounded-t-lg accent-bg transition-all duration-500 ease-out';
+          ? 'w-full rounded-t-lg bg-slate-700/60 gpu-transition'
+          : 'w-full rounded-t-lg accent-bg gpu-transition';
         bar.style.height = '0%';
         requestAnimationFrame(() => { bar.style.height = `${pct}%`; });
 
