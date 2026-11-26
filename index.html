@@ -81,8 +81,8 @@
       box-shadow: 0 0 0 1px var(--accent-soft);
     }
     @keyframes flameFlicker {
-      0%, 100% { transform: scale(1) rotate(-2deg); filter: drop-shadow(0 0 6px rgba(249, 115, 22, 0.7)); }
-      50% { transform: scale(1.12) rotate(3deg); filter: drop-shadow(0 0 11px rgba(251, 146, 60, 0.95)); }
+      0%, 100% { transform: scale(1) rotate(-2deg) translateZ(0); }
+      50% { transform: scale(1.12) rotate(3deg) translateZ(0); }
     }
     @keyframes tabSlideInRight {
       from { opacity: 0; transform: translate3d(18px, 0, 0) scale(0.985); }
@@ -163,7 +163,6 @@
     }
 
     button, .nav-tab {
-      will-change: transform, opacity;
       transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1), opacity 280ms cubic-bezier(0.22, 1, 0.36, 1);
     }
     button:active { transform: scale(0.96); }
@@ -1183,6 +1182,10 @@
         state.streakFreezes = saved.streakFreezes ?? 0;
         if (saved.unlockedRewards) state.unlockedRewards = saved.unlockedRewards;
         if (typeof saved.studyBuddyEnabled === 'boolean') state.studyBuddyEnabled = saved.studyBuddyEnabled;
+        if (typeof saved.ambientVolume === 'number') state.ambientVolume = saved.ambientVolume;
+        if (typeof saved.soundEnabled === 'boolean') state.savedSoundEnabled = saved.soundEnabled;
+        if (typeof saved.autoPomo === 'boolean') state.savedAutoPomo = saved.autoPomo;
+        if (typeof saved.autoBreakMins === 'number') state.savedAutoBreakMins = saved.autoBreakMins;
         if (saved.activeSession) state.activeSession = saved.activeSession;
       }
     } catch (e) {}
@@ -1210,6 +1213,10 @@
           streakFreezes: state.streakFreezes,
           unlockedRewards: state.unlockedRewards,
           studyBuddyEnabled: state.studyBuddyEnabled,
+          soundEnabled: soundToggle ? soundToggle.checked : true,
+          autoPomo: autoPomoToggle ? autoPomoToggle.checked : false,
+          autoBreakMins: autoBreakMins ? Number(autoBreakMins.value) || 10 : 10,
+          ambientVolume: state.ambientVolume,
           activeSession: state.activeSession
         }));
       } catch (e) {}
@@ -1972,6 +1979,7 @@
       state.ambientVolume = Number(e.target.value) / 100;
       if (ambientGain) ambientGain.gain.value = state.ambientVolume * 0.35;
     });
+    ambientVol.addEventListener('change', saveState);
 
     // Timer & Goals
     function formatTime(seconds) {
@@ -2088,6 +2096,7 @@
 
     let buddyMood = 'focus';
     let celebrationTimeoutId = null;
+    let autoPomoTimeoutId = null;
     let buddyBubbleOpen = false;
     let isFocusOverlayOpen = false;
     const BUDDY_SIZE = 56;
@@ -2551,6 +2560,7 @@
 
     function stopTimer(keepSession) {
       if (state.intervalId) { clearInterval(state.intervalId); state.intervalId = null; }
+      if (autoPomoTimeoutId) { clearTimeout(autoPomoTimeoutId); autoPomoTimeoutId = null; }
       state.isRunning = false;
       if (!keepSession) {
         state.isPaused = false;
@@ -2654,6 +2664,10 @@
 
     function endFocusSession() {
       closeExitConfirmModal();
+      if (!state.isRunning && !state.isPaused) {
+        closeFocusOverlay();
+        return;
+      }
       if (state.timerMode === 'countup') {
         finishCountupSession();
         return;
@@ -2740,12 +2754,14 @@
         if (state.timerMode === 'countup') {
           state.elapsedSeconds = Math.min(180 * 60, state.elapsedSeconds);
           creditLiveMinutes(nowMs, false);
-          sendNotification(
-            'Timer Mode Running',
-            `${formatTime(state.elapsedSeconds)} elapsed${topic ? ' · ' + topic : ''}`,
-            'studyflow-running',
-            true
-          );
+          if (state.elapsedSeconds % 60 === 0) {
+            sendNotification(
+              'Timer Mode Running',
+              `${formatTime(state.elapsedSeconds)} elapsed${topic ? ' · ' + topic : ''}`,
+              'studyflow-running',
+              true
+            );
+          }
           if (state.elapsedSeconds >= 180 * 60) {
             finishCountupSession(startTime + 180 * 60 * 1000);
             return;
@@ -2759,22 +2775,26 @@
           if (state.timerMode === 'focus') {
             creditLiveMinutes(nowMs, false);
           }
-          sendNotification(
-            state.timerMode === 'break' ? 'Break Timer Running' : 'Focus Timer Running',
-            `${formatTime(state.remainingSeconds)} remaining${topic ? ' · ' + topic : ''}`,
-            'studyflow-running',
-            true
-          );
+          if (state.remainingSeconds % 60 === 0) {
+            sendNotification(
+              state.timerMode === 'break' ? 'Break Timer Running' : 'Focus Timer Running',
+              `${formatTime(state.remainingSeconds)} remaining${topic ? ' · ' + topic : ''}`,
+              'studyflow-running',
+              true
+            );
+          }
         }
         if (state.remainingSeconds <= 0) {
-          if (state.timerMode === 'focus' && state.totalSeconds >= 600) {
+          const finishedMode = state.timerMode;
+          const finishedTotalSecs = state.totalSeconds;
+          if (finishedMode === 'focus' && finishedTotalSecs >= 600) {
             creditLiveMinutes(endTime, true);
           }
           state.remainingSeconds = 0;
           state.elapsedSeconds = 0;
           stopTimer(false);
-          if (state.timerMode === 'focus') {
-            if (state.totalSeconds >= 600) {
+          if (finishedMode === 'focus') {
+            if (finishedTotalSecs >= 600) {
               recordCompletedSession(endTime);
               setBuddyMood('completed');
               timerStatus.textContent = 'Great job! Take a break.';
@@ -2801,11 +2821,13 @@
           toastMsg.classList.remove('opacity-0');
           playChime();
           if (autoPomoToggle && autoPomoToggle.checked) {
-            const nextMode = state.timerMode === 'focus' ? 'break' : 'focus';
+            const nextMode = finishedMode === 'focus' ? 'break' : 'focus';
             const nextMins = nextMode === 'break' ? (Number(autoBreakMins.value) || 10) : (Number(customNumber.value) || 50);
-            setTimeout(() => {
-              state.timerMode = nextMode;
-              timerModePill.textContent = nextMode === 'break' ? 'Break' : 'Focus';
+            if (autoPomoTimeoutId) clearTimeout(autoPomoTimeoutId);
+            autoPomoTimeoutId = setTimeout(() => {
+              autoPomoTimeoutId = null;
+              if (state.isRunning || state.isPaused) return;
+              switchTimerMode(nextMode);
               setDuration(nextMins);
               toggleTimer();
             }, 2600);
@@ -3178,7 +3200,9 @@
     });
 
     setInterval(() => {
-      if (state.activeTab === 'calendar') renderExams();
+      if (!document.hidden && state.activeTab === 'calendar' && state.exams.length > 0) {
+        renderExams();
+      }
       checkReminders();
     }, 1000);
 
@@ -3293,7 +3317,7 @@
 
     function handleAppWakeOrFocus() {
       checkDayRollover(true);
-      if (state.activeSession) {
+      if (state.activeSession && !state.isRunning) {
         resumeActiveSession();
       }
     }
@@ -3317,6 +3341,13 @@
     }, 30000);
 
     // Initial render
+    if (typeof state.savedSoundEnabled === 'boolean' && soundToggle) soundToggle.checked = state.savedSoundEnabled;
+    if (typeof state.savedAutoPomo === 'boolean' && autoPomoToggle) autoPomoToggle.checked = state.savedAutoPomo;
+    if (typeof state.savedAutoBreakMins === 'number' && autoBreakMins) autoBreakMins.value = String(state.savedAutoBreakMins);
+    if (ambientVol) ambientVol.value = String(Math.round((state.ambientVolume ?? 0.3) * 100));
+    if (soundToggle) soundToggle.addEventListener('change', saveState);
+    if (autoPomoToggle) autoPomoToggle.addEventListener('change', saveState);
+    if (autoBreakMins) autoBreakMins.addEventListener('change', saveState);
     updateNotifUI();
     applyColorMode(state.colorMode);
     applyBackground(state.bgStyle);
